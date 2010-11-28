@@ -1,0 +1,12 @@
+[submodule "lib/jquery"]
+	path = lib/jquery
+	url = https://github.com/jquery/jquery.git
+[submodule "lib/backbone"]
+	path = lib/backbone
+	url = https://github.com/documentcloud/backbone.git
+[submodule "lib/underscore.js"]
+	path = lib/underscore.js
+	url = https://github.com/documentcloud/underscore.git
+[submodule "lib/timeago"]
+	path = lib/timeago
+	url = https://github.com/rmm5t/jquery-timeago.git
