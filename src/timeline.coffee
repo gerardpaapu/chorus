@@ -107,3 +107,17 @@ distinct = (arr, test) ->
     return out
 
 extend Chorus, {Timeline, View}
+
+$.fn.qorus = (arg) ->
+    view = switch Object::toString.call arg
+        when "[object String]"
+            new View feeds: $.makeArray(arguments)
+
+        when "[object Object]"
+            new View arg
+
+        else null
+
+    $(this)
+        .append(view.toElement())
+        .data('View', view)

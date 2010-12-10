@@ -11,7 +11,7 @@ class Tweet extends Status
 
     renderBody: -> """
         <p class="statusBody">
-            #{ Tweet.linkify @text }
+            #{ Tweet.linkify(@text).replace '\n', '<br />' }
         </p>"""
 
     renderReply: -> """
