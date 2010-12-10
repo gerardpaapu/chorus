@@ -43,7 +43,8 @@ class Status
            title="#{ iso_datestring @date }">
             #{ @date.toLocaleDateString() } 
         </a>"""
-        # el.timeago()
+
+        if $.fn.timeago? then el.timeago() else el
 
     renderScreenName: -> """
         <a class="username"
@@ -51,7 +52,7 @@ class Status
             #{@username}
         </a>"""
 
-    renderBody: -> """<p class="statusBody">#{@text}</p>"""
+    renderBody: -> """<p class="statusBody">#{@text.replace '\n', '<br />'}</p>"""
 
     raw: null
 
@@ -62,7 +63,7 @@ class Status
 iso_datestring = (d) ->
     pad = (n) -> if n < 10 then '0' + n else n
     year    = pad d.getUTCFullYear()
-    month   = pad d.getUTCMonth()
+    month   = pad d.getUTCMonth() + 1
     day     = pad d.getUTCDate()
     hours   = pad d.getUTCHours()
     minutes = pad d.getUTCMinutes()
