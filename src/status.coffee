@@ -1,5 +1,5 @@
 class Status
-    constructor: (@id, @username, @avatar, date, @text, raw) ->
+    constructor: (@id, @username, @avatar, date, @text, @raw) ->
         @date = new Date(date)
 
     toKey: -> "<Status:#{@username} ID:#{@id}>"
@@ -36,11 +36,14 @@ class Status
             <img src="#{@getAvatar()}" class="avatar" />
         </a>"""
 
-    renderTimestamp: -> """
-        <a class="date" href="#{ @getUrl() }">
-            #{ @date.toLocaleDateString() }, 
-            #{ @date.toLocaleTimeString() }
+    renderTimestamp: -> 
+        el = $ """
+        <a class="date"
+           href="#{ @getUrl() }"
+           title="#{ iso_datestring @date }">
+            #{ @date.toLocaleDateString() } 
         </a>"""
+        # el.timeago()
 
     renderScreenName: -> """
         <a class="username"
@@ -55,5 +58,16 @@ class Status
     @equal: (a, b) -> a.toKey() is b.toKey()
 
     @byDate: (a, b) -> b.date.getTime() - a.date.getTime()
+
+iso_datestring = (d) ->
+    pad = (n) -> if n < 10 then '0' + n else n
+    year    = pad d.getUTCFullYear()
+    month   = pad d.getUTCMonth()
+    day     = pad d.getUTCDate()
+    hours   = pad d.getUTCHours()
+    minutes = pad d.getUTCMinutes()
+    seconds = pad d.getUTCSeconds()
+
+    "#{year}-#{month}-#{day}T#{hours}:#{minutes}:#{seconds}Z"
 
 @Chorus.Status = Status

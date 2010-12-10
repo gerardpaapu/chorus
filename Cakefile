@@ -46,3 +46,15 @@ task "create-output-dir", "creates `dist`", () ->
         console.log "Created the dist directory"
     catch err
         console.log "The dist directory already exists, but that's fine"
+
+task "compress", "", ->
+    invoke "compile"
+    try
+        compress "subscriber"
+        compress "status"
+        compress "timeline"
+        compress "twitter"
+        console.log "compression succeeded"
+
+    catch err
+        console.log "compression failed: #{err}"

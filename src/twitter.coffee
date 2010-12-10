@@ -16,8 +16,8 @@ class Tweet extends Status
 
     renderReply: -> """
         <a class="reply"
-           href="http://twitter.com/#{@username}/statuses/#{@statusID}">
-           in reply to @#{@username}
+           href="http://twitter.com/#{@reply.username}/statuses/#{@reply.statusID}">
+           in reply to @#{@reply.username}
         </a>"""
 
     toElement: (options) ->
@@ -33,8 +33,8 @@ class Tweet extends Status
 
         reply = if data.in_reply_to_status_id?
             username: data.in_reply_to_screen_name
-            userID: data.in_reply_to_user_id
-            statusID: data.in_reply_to_status_id
+            userID: data.in_reply_to_user_id_str
+            statusID: data.in_reply_to_status_id_str
 
         {id_str, created_at, text} = data
 
