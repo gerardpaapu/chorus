@@ -1,1 +1,1 @@
-A port of Chorus from MooTools to ... Coffeescript, jQuery, Backbone, underscore and timeago
+A port of Chorus from MooTools to ... Coffeescript, jQuery, underscore and timeago
