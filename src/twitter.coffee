@@ -1,27 +1,28 @@
-{Timeline, Status} = Chorus
-{extend, clone, indexOf, map} = _
+{Timeline, Status} = Chorus = @Chorus
+{extend, clone} = _
 
 class Tweet extends Status
     constructor: (id, username, avatar, date, @text, @reply) ->
         super id, username, avatar, Tweet.datefix(date), text, reply
-        @text = linkify @text
 
     getUrl: -> "http://twitter.com/#{@username}/statuses/#{@id}"
 
     getStreamUrl: -> "http://twitter.com/#{@username}"
 
-    renderReply: ->
-        $ """
+    renderBody: -> """
+        <p class="statusBody">
+            #{ Tweet.linkify @text }
+        </p>"""
+
+    renderReply: -> """
         <a class="reply"
            href="http://twitter.com/#{@username}/statuses/#{@statusID}">
            in reply to @#{@username}
-        </a>
-        """
+        </a>"""
 
     toElement: (options) ->
         element = super options
-        if @reply?
-            element.append @renderReply()
+        if @reply? then element.append @renderReply()
 
         element
 
@@ -51,9 +52,45 @@ class Tweet extends Status
         # that IE can't handle, so I convert it to something more normal.
         str.replace(/^(.+) (\d+:\d+:\d+) ((?:\+|-)\d+) (\d+)$/, "$1 $4 $2 GMT$3")
 
-class TwitterUserTimeline extends Timeline
+    @linkify: (str) ->
+        # creates links for hashtags, mentions and urls
+        # TODO: replace this BS with some code to read the entities property
+        # that twitter delivers from the API
+        str .replace(/(\s|^)(mailto\:|(news|(ht|f)tp(s?))\:\/\/\S+)/g, '$1<a href="$2">$2</a>')
+            .replace(/(\s|^)@(\w+)/g, '$1<a class="mention" href="http://twitter.com/$2">@$2</a>')
+            .replace(/(\s|^)#(\w+)/g, '$1<a class="hashTag" href="http://twitter.com/search?q=%23$2">#$2</a>')
+
+    @fromID: (id, callback) ->
+        unless callback?
+            placeholder = $ '<div class="placeholder" />'
+            callback = (status) ->
+                status.toElement().replaceAll(placeholder)
+
+        $.ajax
+            url: "http://api.twitter.com/1/statuses/show/#{id}.json"
+            success: (json) -> callback Tweet.from(json)
+
+        return placeholder || null
+
+class TwitterTimeline extends Timeline
+    update: (n) ->
+        data = clone @sendData
+
+        if @latest then data.since_id = @latest.id
+
+        jQuery.ajax
+            url: @queryUrl
+            data: data
+            dataType: 'jsonp'
+            success: (data) => @prePublish data
+
+    queryUrl: "http://api.twitter.com/1/statuses/public_timeline.json"
+
+    statusesFromData: (data) -> Tweet.from item for item in data
+
+class TwitterUserTimeline extends TwitterTimeline
     constructor: (username, options) ->
-        extend @options, options
+        @options  = extend {}, @options, options
         @username = username.toLowerCase()
         @sendData =
             screen_name: @username
@@ -62,26 +99,12 @@ class TwitterUserTimeline extends Timeline
 
         super options
 
-    update: (n) ->
-        data = clone @sendData
+    options: extend({}, Timeline::options, { includeRetweets: yes })
 
-        if @latest then data['since_id'] = @latest.id
+    queryUrl: "http://api.twitter.com/1/statuses/user_timeline.json"
 
-        jQuery.ajax
-            url: @queryUrl
-            data: data
-            success: (data) => @prePublish data
+Timeline.shorthands.push
+    pattern: /^@([a-z-_]+)/i
+    fun: (_, name) -> new TwitterUserTimeline(name)
 
-    queryUrl: "http://api.twitter.com/1/statuses/public_timeline.json"
-
-    options: { includeRetweets: yes }
-
-    userData: null
-
-extend Chorus, {
-    Tweet,
-    TwitterTimeline,
-    TwitterUserTimeline,
-    TwitterSearchTimeline,
-    TwitterAboutTimeline
-}
+extend @Chorus, {Tweet, TwitterTimeline, TwitterUserTimeline}

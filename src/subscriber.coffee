@@ -1,4 +1,4 @@
-Chorus = @Chorus ? {}
+Chorus = @Chorus ?= {}
 {extend, indexOf} = _
 
 class Events
@@ -34,21 +34,37 @@ class Events
             fn args... for fn in list
 
         if (list = @_callbacks.all)?
-            fn.args... for fn in list
+            fn args... for fn in list
 
         return this
 
 class Subscription
+    constructor: (@publisher, @subscriber, @type='update') ->
+        @callback = (data) =>
+            @subscriber.update data, @publisher
+
+        @publisher.bind @type, @callback
+
     cancel: ->
-        
+        @publisher.unbind @type, @callback
 
 class Subscriber extends Events
     subscribe: (publisher) ->
-        new Subscription publisher, this
+        @subscriptions.push(new Subscription publisher, this)
 
-    subscription: []
+    subscriptions: []
+
+    unsubscribe: (subscription) ->
+        index = indexOf @subscriptions, subscription
+        if index isnt -1
+            @subscription.splice index, 1
+            subscription.cancel()
+
+    update: (data, source) ->
+        this
 
 class Publisher extends Events
-
+    publish: (data, type='update') ->
+        @trigger type, data
 
 extend Chorus, {Subscriber, Subscription, Publisher}

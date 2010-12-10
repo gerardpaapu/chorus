@@ -1,0 +1,55 @@
+.view { }
+.status {
+    border: solid 1px #ccc;
+    margin: 1em; padding: 1em;
+}
+
+.status img.avatar {
+    margin: 0 5px 5px 0;
+    height: 48px; width: 48px;
+}
+
+.status .username {
+    float: left;
+    padding-right: 0.5em;
+}
+
+.status .statusBody {
+    margin: 0 0 20px 58px;
+}
+
+.status img.avatar, 
+.status .date,
+.status .reply {
+    display: block;
+    float: left;
+    margin-right: 5px;
+}
+
+.status img.avatar,
+.status .date,
+.status .extras {
+    clear: left;
+}
+
+.status .extras {
+    padding: 5px 0;
+}
+
+.status .embed,
+.status a.embed > img {
+    display: block;
+    float: left;
+    margin: 0 5px 5px 0;
+}
+
+
+.status:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    height: 0px;
+    overflow: hidden;
+}
+
