@@ -1,5 +1,4 @@
-$ = jQuery
-{extend, map, filter, indexOf} = _
+{inArray, makeArray, extend} = $ = jQuery
 {Publisher, Subscriber, Status} = Chorus = @Chorus
 
 class Timeline extends Publisher
@@ -103,7 +102,7 @@ class View extends Subscriber
 
 distinct = (arr, test) ->
     out = []
-    out.push(i) for i in arr when indexOf out, i is -1
+    out.push(i) for i in arr when inArray out, i is -1
     return out
 
 extend Chorus, {Timeline, View}
@@ -111,7 +110,7 @@ extend Chorus, {Timeline, View}
 $.fn.chorus = (arg) ->
     view = switch Object::toString.call arg
         when "[object String]"
-            new View feeds: $.makeArray(arguments)
+            new View feeds: makeArray(arguments)
 
         when "[object Object]"
             new View arg

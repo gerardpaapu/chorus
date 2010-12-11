@@ -1,5 +1,5 @@
 {Status, Timeline} = Chorus = @Chorus
-{extend} = _
+{extend} = $ = jQuery
 
 class FacebookStatus extends Status
     constructor: (id, username, avatar, date, text, raw, @userid) ->
@@ -33,7 +33,7 @@ class FacebookStatus extends Status
         id = match and match[1]
         link = data.source or data.link
         text = data.message ? ''
-        if link? then text += """<a href="#{link}">#{data.name}</a>"""
+        if link? then text += """ <a href="#{link}">#{data.name}</a>"""
 
         new FacebookStatus id, data.from.name, null, data.created_time, text, data, data.from.id
 
@@ -41,7 +41,7 @@ renderComment = (data) ->
     url = FacebookStatus::getStreamUrl.call {userid: data.from.id}
     """
     <p class="comment">
-        <a href="#{url}">#{data.from.name}</a>:
+        <a href="#{url}" class="username">#{data.from.name}</a>
         #{ data.message }
     </p>"""
 

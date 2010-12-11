@@ -1,5 +1,5 @@
 Chorus = @Chorus ?= {}
-{extend, indexOf} = _
+{extend, inArray} = $ = jQuery
 
 class Events
     bind: (ev, callback) ->
@@ -21,7 +21,7 @@ class Events
 
         else
             list = @_callbacks[ev]
-            index = indexOf list, callback
+            index = inArray list, callback
 
             list.splice index, 1 unless index is -1
 
@@ -55,7 +55,7 @@ class Subscriber extends Events
     subscriptions: []
 
     unsubscribe: (subscription) ->
-        index = indexOf @subscriptions, subscription
+        index = inArray @subscriptions, subscription
         if index isnt -1
             @subscription.splice index, 1
             subscription.cancel()

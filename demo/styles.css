@@ -1,24 +1,67 @@
-.view {
-    font-size: 14px;
-    width: 40em;
+body { background: #333; }
+
+.view { 
+    font-size: 12px;
     line-height: 1.4;
+    width: 30em;
+    margin: 0 auto;
+    padding: 1em 2em;
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    border-radius: 0.5em;
+    background: white;
+    overflow: hidden;
 }
 
 .status {
-    border: solid 1px #ccc;
-    margin: 1em; padding: 1em;
+    border-top: solid 1px #ccc;
+    padding: 1em 0;
+}
+
+.status:first-child {
+    border-top: none;
 }
 
 .status img.avatar {
     margin: 0 5px 5px 0;
     height: 48px; width: 48px;
+    overflow: hidden;
+    border-radius: 4px;
+    -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
 }
+
 
 .status .username {
     display: block;
     float: left;
-    margin-left: 5px;
     padding-right: 0.5em;
+    margin-left: 5px;
+}
+
+.status .username:link,
+.status .username:visited,
+.status .date:link,
+.status .date:visited
+{
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+.status .username:hover,
+.status .username:active {
+    color: #555;
+}
+
+.status .date:link,
+.status .date:visited
+{
+    color: #555;
 }
 
 .status .statusBody {
@@ -50,7 +93,6 @@
     margin: 0 5px 5px 0;
 }
 
-
 .status:after {
     content: ".";
     display: block;
@@ -60,3 +102,16 @@
     overflow: hidden;
 }
 
+.comments { 
+    clear: both;
+    font-size: 10px;
+    color: #555;
+}
+
+.comment {
+    padding: 0.5em 0;
+}
+
+.comment .username {
+    display: inline;
+}

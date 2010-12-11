@@ -1,3 +1,3 @@
-A port of Chorus from MooTools to ... Coffeescript, jQuery, underscore and timeago
+A port of Chorus from MooTools to ... Coffeescript and jQuery (and optionally the jQuery.timeago plugin)
 
 The contents of this repo are available under the BSD style license specified in `LICENSE`

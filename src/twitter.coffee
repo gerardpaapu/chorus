@@ -1,5 +1,5 @@
 {Timeline, Status} = Chorus = @Chorus
-{extend, clone} = _
+{extend} = $ = jQuery
 
 class Tweet extends Status
     constructor: (id, username, avatar, date, @text, @reply) ->
@@ -74,7 +74,7 @@ class Tweet extends Status
 
 class TwitterTimeline extends Timeline
     update: (n) ->
-        data = clone @sendData
+        data = extend {}, @sendData
 
         if @latest then data.since_id = @latest.id
 
