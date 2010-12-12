@@ -1,4 +1,4 @@
-fs = require "fs"
+{readFileSync, writeFileSync} = fs = require "fs"
 
 compile = (name) ->
     coffee = require "coffee-script"
@@ -29,6 +29,12 @@ compress = (name) ->
         console.log "failed to compress #{name}"
         throw err
 
+concat = (files..., out) ->
+    src = for file in files
+        readFileSync "dist/#{file}.js"
+
+    writeFileSync "dist/#{out}.js", src.join("\n")
+
 task "compile", "compile all the coffee files to js", ->
     invoke "create-output-dir"
     try
@@ -40,6 +46,8 @@ task "compile", "compile all the coffee files to js", ->
         compile "friendfeed"
         compile "wordpress"
         compile "github"
+        concat "subscriber", "status", "timeline", "core"
+        concat "core", "twitter", "github", "qorus"
         console.log "compilation succeeded"
     catch err
         console.log "compilation failed: #{err}"
