@@ -116,10 +116,9 @@ class TwitterAboutTimeline extends TwitterTimeline
         @subscriber = new Subscriber
         @subscriber.subscribe @user
         @subscriber.subscribe @search
-        @subscriber.update = (data, source) =>
-            @publish data
+        @subscriber.update = (data, source) => @publish data
 
-datefix =(str) ->
+datefix = (str) ->
     # Twitter seems to give some wacky date format
     # that IE can't handle, so I convert it to something more normal.
     str.replace(/^(.+) (\d+:\d+:\d+) ((?:\+|-)\d+) (\d+)$/, "$1 $4 $2 GMT$3")
