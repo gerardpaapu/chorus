@@ -32,7 +32,7 @@ class Status
     getStreamUrl: -> null
 
     renderAvatar: -> """
-        <a href="#{@getStreamUrl()}">
+        <a href="#{@getStreamUrl()}" class="avatar">
             <img src="#{@getAvatar()}" class="avatar" />
         </a>"""
 

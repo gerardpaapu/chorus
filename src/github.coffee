@@ -5,19 +5,20 @@ class GithubCommit extends Status
     constructor: (id, username, avatar, date, text, raw, @url) ->
         super id, username, avatar, date, text, raw
 
-    getUrl: -> "http://github.com/#{@url}"
+    getUrl: -> "http://github.com/#{ @url }"
 
     getStreamUrl: ->
-        "http://github.com/#{@url.replace /\/commit\/[^\/]+$/, ''}"
+        "http://github.com/#{ @url.replace /\/commit\/[^\/]+$/, ''}"
 
     @from = (json) ->
         {author, url, id, authored_date, message} = json
-        avatar = "http://www.gravatar.com/avatar/#{md5 trim(author.email).toLowerCase()}"
-        new GithubCommit id, author.name, avatar, authored_date, message, json, url
+        {name, email} = author
+        new GithubCommit id, name, gravatar(email), authored_date, message, json, url
 
 class GithubCommits extends Timeline
     constructor: (@username, @repo, options) ->
-        @queryUrl = "http://github.com/api/v2/json/commits/list/#{@username}/#{@repo}/master"
+        @queryUrl = "http://github.com/api/v2/json/commits/list"
+        @queryUrl += "/#{@username}/#{@repo}/#{options?.branch ? 'master'}"
         super options
 
     update: -> jQuery.ajax
@@ -32,6 +33,9 @@ Timeline.shorthands.unshift
     fun: (_, name, project) -> new GithubCommits name, project
 
 extend Chorus, {GithubCommit, GithubCommits}
+
+gravatar = (email) ->
+    "http://www.gravatar.com/avatar/#{ md5 trim(email).toLowerCase() }"
 
 trim = (str) -> str.replace(/^\s+|\s+$/g, "")
 
