@@ -37,6 +37,9 @@ task "compile", "compile all the coffee files to js", ->
         compile "timeline"
         compile "twitter"
         compile "facebook"
+        compile "friendfeed"
+        compile "wordpress"
+        compile "github"
         console.log "compilation succeeded"
     catch err
         console.log "compilation failed: #{err}"
@@ -56,6 +59,9 @@ task "compress", "", ->
         compress "timeline"
         compress "twitter"
         compress "facebook"
+        compress "friendfeed"
+        compress "wordpress"
+        compress "github"
         console.log "compression succeeded"
 
     catch err
