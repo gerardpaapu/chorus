@@ -1,11 +1,11 @@
-body { background: #333; }
+body { background: #555; }
 
 .view { 
     font-size: 12px;
     line-height: 1.4;
     width: 30em;
     margin: 0 auto;
-    padding: 1em 2em;
+    padding: 1em 0;
     -moz-border-radius: 0.5em;
     -webkit-border-radius: 0.5em;
     border-radius: 0.5em;
@@ -13,9 +13,14 @@ body { background: #333; }
     overflow: hidden;
 }
 
+.view a:link,
+.view a:visited {
+    text-decoration: none;
+}
+
 .status {
-    border-top: solid 1px #ccc;
-    padding: 1em 0;
+    border-top: solid 1px #ddd;
+    padding: 1em 2em;
 }
 
 .status:first-child {
@@ -38,17 +43,13 @@ body { background: #333; }
 
 .status .username {
     display: block;
-    float: left;
-    padding-right: 0.5em;
-    margin-left: 5px;
+    margin-left: 58px;
 }
 
 .status .username:link,
 .status .username:visited,
 .status .date:link,
-.status .date:visited
-{
-    text-decoration: none;
+.status .date:visited {
     font-weight: bold;
     color: black;
 }
@@ -59,13 +60,12 @@ body { background: #333; }
 }
 
 .status .date:link,
-.status .date:visited
-{
+.status .date:visited {
     color: #555;
 }
 
 .status .statusBody {
-    margin: 0 0 20px 58px;
+    margin: 0 0 0 58px;
 }
 
 .status img.avatar, 
@@ -86,6 +86,10 @@ body { background: #333; }
     padding: 5px 0;
 }
 
+.status .date {
+    padding-top: 10px;    
+}
+
 .status .embed,
 .status a.embed > img {
     display: block;
@@ -104,6 +108,7 @@ body { background: #333; }
 
 .comments { 
     clear: both;
+    padding-top: 10px;
     font-size: 10px;
     color: #555;
 }
@@ -114,4 +119,5 @@ body { background: #333; }
 
 .comment .username {
     display: inline;
+    margin: 0; padding: 0;
 }

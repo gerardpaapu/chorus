@@ -1,6 +1,6 @@
-$(function() {	
+$(function () {	
     $(document.body).chorus({
-        feeds: ["@sharkbrain", "@ruatara", "FB:barackobama"],
+        feeds: ["GH:sharkbrainguy/qorus", "@sharkbrain"],
         renderOptions: {
             comment: "yes please"
         }
