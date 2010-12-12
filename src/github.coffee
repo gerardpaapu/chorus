@@ -32,6 +32,11 @@ Timeline.shorthands.unshift
     pattern: /^GH:([a-z-_]+)\/([a-z-_]+)/i,
     fun: (_, name, project) -> new GithubCommits name, project
 
+Timeline.shorthands.unshift
+    pattern: /^GH:([^\/]+)\/([^\/]+)\/([^\/]+)/i,
+    fun: (_, name, project, branch) ->
+        new GithubCommits name, project, branch: branch
+
 extend Chorus, {GithubCommit, GithubCommits}
 
 gravatar = (email) ->
