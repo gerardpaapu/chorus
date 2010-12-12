@@ -52,7 +52,7 @@ task "compile", "compile all the coffee files to js", ->
     catch err
         console.log "compilation failed: #{err}"
 
-task "create-output-dir", "creates `dist`", () ->
+task "create-output-dir", "creates `dist`", ->
     try
         fs.mkdirSync "dist", 0777
         console.log "Created the dist directory"

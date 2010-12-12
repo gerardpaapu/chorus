@@ -2,8 +2,8 @@
 {extend} = $ = jQuery
 
 class Tweet extends Status
-    constructor: (id, username, avatar, date, @text, @reply) ->
-        super id, username, avatar, Tweet.datefix(date), text, reply
+    constructor: (id, username, avatar, date, text, raw, @reply) ->
+        super id, username, avatar, datefix(date), text, raw
 
     getUrl: -> "http://twitter.com/#{@username}/statuses/#{@id}"
 
@@ -11,7 +11,7 @@ class Tweet extends Status
 
     renderBody: -> """
         <p class="statusBody">
-            #{ Tweet.linkify(@text).replace '\n', '<br />' }
+            #{ linkify(@text).replace '\n', '<br />' }
         </p>"""
 
     renderReply: -> """
@@ -45,20 +45,7 @@ class Tweet extends Status
             user_name = data.user.screen_name
             avatar = data.user.profile_image_url
 
-        new Tweet id_str, user_name, avatar, created_at, text, reply
-
-    @datefix: (str) ->
-        # Twitter seems to give some wacky date format
-        # that IE can't handle, so I convert it to something more normal.
-        str.replace(/^(.+) (\d+:\d+:\d+) ((?:\+|-)\d+) (\d+)$/, "$1 $4 $2 GMT$3")
-
-    @linkify: (str) ->
-        # creates links for hashtags, mentions and urls
-        # TODO: replace this BS with some code to read the entities property
-        # that twitter delivers from the API
-        str .replace(/(\s|^)(mailto\:|(news|(ht|f)tp(s?))\:\/\/\S+)/g, '$1<a href="$2">$2</a>')
-            .replace(/(\s|^)@(\w+)/g, '$1<a class="mention" href="http://twitter.com/$2">@$2</a>')
-            .replace(/(\s|^)#(\w+)/g, '$1<a class="hashTag" href="http://twitter.com/search?q=%23$2">#$2</a>')
+        new Tweet id_str, user_name, avatar, created_at, text, data, reply
 
     @fromID: (id, callback) ->
         unless callback?
@@ -103,8 +90,72 @@ class TwitterUserTimeline extends TwitterTimeline
 
     queryUrl: "http://api.twitter.com/1/statuses/user_timeline.json"
 
-Timeline.shorthands.push
-    pattern: /^@([a-z-_]+)/i
-    fun: (_, name) -> new TwitterUserTimeline(name)
+class TwitterSearchTimeline extends TwitterTimeline
+    constructor: (@searchTerm, options) ->
+        @options = extend {}, @options, options
+        @sendData = q: searchTerm, rpp: @options.count, result_type: "recent"
+        super options
 
-extend @Chorus, {Tweet, TwitterTimeline, TwitterUserTimeline}
+    queryUrl: "http://search.twitter.com/search.json"
+
+    prePublish: (data) ->
+        if data.results? then super data.results
+
+class TwitterListTimeline extends TwitterTimeline
+    constructor: (user, listname, options) ->
+        @options = extend {}, @options, options
+        @queryUrl = "http://api.twitter.com/1/#{user}/lists/#{listname}/statuses.json"
+        @sendData = extend({}, @sendData, {per_page: @options.count})
+
+        super options
+
+class TwitterAboutTimeline extends TwitterTimeline
+    constructor: (screenname, options) ->
+        @user = new TwitterUserTimeline screenname, options
+        @search = new TwitterSearchTimeline "to:" + screenname
+        @subscriber = new Subscriber
+        @subscriber.subscribe @user
+        @subscriber.subscribe @search
+        @subscriber.update = (data, source) =>
+            @publish data
+
+datefix =(str) ->
+    # Twitter seems to give some wacky date format
+    # that IE can't handle, so I convert it to something more normal.
+    str.replace(/^(.+) (\d+:\d+:\d+) ((?:\+|-)\d+) (\d+)$/, "$1 $4 $2 GMT$3")
+
+linkify = (str) ->
+    # creates links for hashtags, mentions and urls
+    # TODO: replace this BS with some code to read the entities property
+    # that twitter delivers from the API
+    str .replace(/(\s|^)(mailto\:|(news|(ht|f)tp(s?))\:\/\/\S+)/g, '$1<a href="$2">$2</a>')
+        .replace(/(\s|^)@(\w+)/g, '$1<a class="mention" href="http://twitter.com/$2">@$2</a>')
+        .replace(/(\s|^)#(\w+)/g, '$1<a class="hashTag" href="http://twitter.com/search?q=%23$2">#$2</a>')
+
+Array::push.apply Timeline.shorthands, [
+    {
+        pattern: /^@([a-z-_]+)\/([a-z-_]+)/i,
+        fun: (_, name, list_name) -> new TwitterListTimeline(name, list_name)
+    },
+    {
+        pattern: /^@\+([a-z-_]+)/i,
+        fun: (_, name) -> new TwitterAboutTimeline name
+    },
+    {
+        pattern: /^@([a-z-_]+)/i,
+        fun: (_, name) -> new TwitterUserTimeline name
+    },
+    {
+        pattern: /^(.*)$/,
+        fun: (_, terms) -> new TwitterSearchTimeline terms
+    }
+]
+
+extend @Chorus, {
+    Tweet,
+    TwitterTimeline,
+    TwitterUserTimeline,
+    TwitterListTimeline,
+    TwitterSearchTimeline,
+    TwitterAboutTimeline
+}
