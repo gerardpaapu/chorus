@@ -1,4 +1,4 @@
-{Timeline, Status} = Chorus = @Chorus
+{Timeline, Status, Subscriber} = Chorus = @Chorus
 {extend} = $ = jQuery
 
 class Tweet extends Status
