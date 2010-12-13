@@ -46,8 +46,9 @@ task "compile", "compile all the coffee files to js", ->
         compile "friendfeed"
         compile "wordpress"
         compile "github"
+        compile "ihackernews"
         concat "subscriber", "status", "timeline", "core"
-        concat "core", "twitter", "github", "qorus"
+        concat "core", "twitter", "github", "ihackernews", "qorus"
         console.log "compilation succeeded"
     catch err
         console.log "compilation failed: #{err}"
@@ -62,14 +63,13 @@ task "create-output-dir", "creates `dist`", ->
 task "compress", "", ->
     invoke "compile"
     try
-        compress "subscriber"
-        compress "status"
-        compress "timeline"
+        compress "core"
         compress "twitter"
         compress "facebook"
         compress "friendfeed"
         compress "wordpress"
         compress "github"
+        compress "qorus"
         console.log "compression succeeded"
 
     catch err
