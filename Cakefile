@@ -1,5 +1,48 @@
 {readFileSync, writeFileSync} = fs = require "fs"
 
+coffee_files = [
+    "subscriber",
+    "status",
+    "timeline",
+    "twitter",
+    "facebook",
+    "friendfeed",
+    "wordpress",
+    "github"
+]
+
+task "compile", "compile all the coffee files to js", ->
+    invoke "create-output-dir"
+
+    try
+        compile file for file in coffee_files
+
+        concat "subscriber", "status", "timeline", "core"
+        concat "core", "twitter", "github", "qorus"
+        console.log "compilation succeeded"
+
+    catch err
+        console.log "compilation failed: #{err}"
+
+task "create-output-dir", "creates `dist`", ->
+    try
+        fs.mkdirSync "dist", 0777
+        console.log "Created the dist directory"
+
+    catch err
+        console.log "The dist directory already exists, but that's fine"
+
+task "compress", "compress the javascript files", ->
+    invoke "compile"
+
+    try
+        compress "core"
+        compress "qorus"
+        console.log "compression succeeded"
+
+    catch err
+        console.log "compression failed: #{err}"
+
 compile = (name) ->
     coffee = require "coffee-script"
     src = fs.readFileSync "src/#{name}.coffee", "utf-8"
@@ -21,6 +64,7 @@ compress = (name) ->
         ast = uglify.ast_mangle ast  # mangle var names etc.
         ast = uglify.ast_squeeze ast # remove whitespace
         out = uglify.gen_code ast    # generate js source
+
         fs.writeFileSync "dist/#{name}.min.js", out, "utf-8"
 
         console.log "compressed #{name}.js"
@@ -34,43 +78,3 @@ concat = (files..., out) ->
         readFileSync "dist/#{file}.js"
 
     writeFileSync "dist/#{out}.js", src.join("\n")
-
-task "compile", "compile all the coffee files to js", ->
-    invoke "create-output-dir"
-    try
-        compile "subscriber"
-        compile "status"
-        compile "timeline"
-        compile "twitter"
-        compile "facebook"
-        compile "friendfeed"
-        compile "wordpress"
-        compile "github"
-        compile "ihackernews"
-        concat "subscriber", "status", "timeline", "core"
-        concat "core", "twitter", "github", "ihackernews", "qorus"
-        console.log "compilation succeeded"
-    catch err
-        console.log "compilation failed: #{err}"
-
-task "create-output-dir", "creates `dist`", ->
-    try
-        fs.mkdirSync "dist", 0777
-        console.log "Created the dist directory"
-    catch err
-        console.log "The dist directory already exists, but that's fine"
-
-task "compress", "", ->
-    invoke "compile"
-    try
-        compress "core"
-        compress "twitter"
-        compress "facebook"
-        compress "friendfeed"
-        compress "wordpress"
-        compress "github"
-        compress "qorus"
-        console.log "compression succeeded"
-
-    catch err
-        console.log "compression failed: #{err}"

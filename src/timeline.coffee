@@ -20,7 +20,7 @@ class Timeline extends Publisher
 
     startUpdates: (period) ->
         period ?= @options.updatePeriod
-        @timer = setInterval ( => @update() ), period
+        @timer = setInterval (=> @update()), period
 
     stopUpdates: ->
         clearInterval @timer
@@ -30,22 +30,24 @@ class Timeline extends Publisher
         statuses = ( s for s in this.statusesFromData(data) when @isNew s )
 
         if statuses.length > 0
-            statuses.sort Status.byDate
-            @latest = statuses[0]
-            @publish statuses
+            @statuses.push statuses...
+            @statuses = sortStatuses(@statuses)
+            @latest = @statuses[0]
+            @publish @statuses
 
     isNew: (status) ->
         !@latest or status.date.getTime() > @latest.date.getTime()
 
-Timeline.shorthands = []
-Timeline.from = (t) ->
-    return t if t instanceof Timeline
+    @shorthands: []
 
-    for short in Timeline.shorthands
-        match = short.pattern.exec t
-        return short.fun match... if match
+    @from: (t) ->
+        return t if t instanceof Timeline
 
-    return null
+        for short in Timeline.shorthands
+            match = short.pattern.exec t
+            return short.fun match... if match
+
+        null
 
 class View extends Subscriber
     constructor: (options) ->
