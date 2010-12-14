@@ -8,6 +8,7 @@ coffee_files = [
     "facebook",
     "friendfeed",
     "wordpress",
+    "ihackernews",
     "github"
 ]
 
