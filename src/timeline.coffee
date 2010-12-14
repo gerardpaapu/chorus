@@ -12,6 +12,7 @@ class Timeline extends Publisher
         updateOnStart: true
         updatePeriod: 90000
 
+    statuses: []
     latest: null
     timer: null
 
@@ -70,24 +71,27 @@ class View extends Subscriber
     statuses: []
     htmlCache: null
 
-    update: (statuses, source) ->
-        @statuses = distinct(@statuses.concat(statuses), (a, b) -> a.toKey() is b.toKey())
-        @statuses.sort Status.byDate
-        @trigger 'update', [statuses, source, this]
+    update: (data, source) ->
+        statuses = []
+        count = @options.count
+
+        @statuses.push source.statuses[0..count]...
+        @statuses = sortStatuses(@statuses)
+        @statuses = @statuses[0..count]
+
+        @trigger 'update'
 
     subscribe: (source) -> super Timeline.from(source)
 
     toElement: ->
-        element = $ '<div class="view" />'
+        element = $ '<div class="view chorusview" />'
 
         @bind 'update', => @updateElement element
         @updateElement element
         element.data 'View', this
 
     updateElement: (element) ->
-        children = for status in @statuses[0..@options.count - 1]
-            @renderStatus status
-
+        children = (@renderStatus status for status in @statuses)
         element.empty().append children...
 
     renderStatus: (status) ->
@@ -100,10 +104,27 @@ class View extends Subscriber
 
         @htmlCache[key]
 
+sortStatuses = (statuses) ->
+    arr = Array::slice.call(statuses)
+    arr.sort(Status.byDate)
+    distinct(arr, Status.equal)
+
 distinct = (arr, test) ->
+    test ?= (a, b) -> a is b
+
+    _some = (fn) ->
+        return true for i in this when fn(i)
+
+        false
+
+    some = Array::some ? _some
+
     out = []
-    out.push(i) for i in arr when inArray out, i is -1
-    return out
+
+    for i in arr when not out.some((item) -> test item, i)
+        out.push(i)
+
+    out
 
 extend Chorus, {Timeline, View}
 
