@@ -1,3 +1,3 @@
 $(function () {	
-    $(document.body).chorus("hn:pg");
+    $(document.body).chorus("@sharkbrain", "gh:sharkbrainguy/qorus");
 });

@@ -1,15 +1,21 @@
-body { background: #555; }
+body { background: #bada55; }
 
 .view { 
     font-size: 12px;
     line-height: 1.4;
     width: 30em;
-    margin: 0 auto;
+    margin: 10px auto;
     padding: 1em 0;
     -moz-border-radius: 0.5em;
     -webkit-border-radius: 0.5em;
     border-radius: 0.5em;
     background: white;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    background-clip: padding-box;
     overflow: hidden;
 }
 
@@ -38,9 +44,11 @@ body { background: #555; }
     font-size: 26px;
     text-align: center;
     vertical-align: center;
-    -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+    
+    -webkit-box-shadow: 0 0 2px black;
+    -moz-box-shadow: 0 0 2px black;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding;
     background-clip: padding-box;
