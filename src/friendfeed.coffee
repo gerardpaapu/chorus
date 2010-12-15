@@ -36,7 +36,7 @@ class FriendFeedTimeline extends Timeline
             url: @queryUrl
             data: @sendData
             dataType: 'jsonp'
-            success: (json) -> @prePublish data
+            success: (json) => @prePublish json
 
     statusesFromData: (json) ->
         FriendfeedStatus.from entry for entry in json.entries
