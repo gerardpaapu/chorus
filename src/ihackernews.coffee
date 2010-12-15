@@ -29,7 +29,8 @@ class HNComment extends Status
 
     @from: (json) ->
         {comment, id, parentId, postedAgo, postedBy, postId} = json
-        new HNComment id, postedBy, parse_date(postedAgo), comment, json, parentId
+        date = parse_date(postedAgo) or new Date()
+        new HNComment id, postedBy, date, comment, json, parentId
 
 class HNUserComments extends Timeline
     constructor: (@userid, options) ->
@@ -63,15 +64,22 @@ parse_date = (str) ->
     hour   = 60 * minute
     day    = 24 * hour
 
-    [_, num, scale] = /([0-9]+) ([a-z]+)s? ago/.exec(str)
+    match = /([0-9]+) ([a-z]+)s? ago/.exec(str)
+
+    return null unless match?
+
+    [_, num, scale] = match
 
     diff = switch scale
         when "day",    "days"    then num * day
         when "hour",   "hours"   then num * hour
         when "minute", "minutes" then num * hour
-        else throw Error "couldn't parse date #{str}"
+        else null
 
-    new Date(now - diff)
+    if diff?
+        new Date(now - diff)
+    else
+        null
 
 smiley = (name) ->
     eyes = "$^*@;TQs><?uveazoO096~"
@@ -89,4 +97,3 @@ smiley = (name) ->
     o = eyes[ num % eyes.length ]
 
     "#{o}_#{o}"
-
