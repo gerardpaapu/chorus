@@ -4,7 +4,7 @@
 
 class HNComment extends Status
     constructor: (@id, @username, @date, @text, @raw, @parentID) ->
-        @avatar = ""
+        @avatar = smiley @username
 
     getUrl: -> "http://news.ycombinator.com/item?id=#{@id}"
 
@@ -12,7 +12,7 @@ class HNComment extends Status
 
     renderAvatar: -> """
         <a href="#{@getStreamUrl()}" class="avatar">
-            #{ smiley @username } 
+            #{ @avatar } 
         </a>"""
 
     renderParent: -> """
@@ -64,22 +64,27 @@ parse_date = (str) ->
     hour   = 60 * minute
     day    = 24 * hour
 
-    match = /([0-9]+) ([a-z]+)s? ago/.exec(str)
+    match = /([0-9]+) ([a-z]+) ago/.exec(str)
 
     return null unless match?
 
     [_, num, scale] = match
 
-    diff = switch scale
-        when "day",    "days"    then num * day
-        when "hour",   "hours"   then num * hour
-        when "minute", "minutes" then num * hour
-        else null
+    num = Number(num)
 
-    if diff?
-        new Date(now - diff)
-    else
-        null
+    switch scale
+        when "day", "days" then
+            diff = num * day
+
+        when "hour",   "hours"
+            diff = num * hour
+
+        when "minute", "minutes"
+            diff = num * minute
+
+        else return null
+
+    new Date(now - diff)
 
 smiley = (name) ->
     eyes = "$^*@;TQs><?uveazoO096~"
