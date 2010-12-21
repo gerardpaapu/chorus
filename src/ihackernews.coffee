@@ -58,36 +58,21 @@ parse_date = (str) ->
     #    (if (>= a 1440) (pr (plural (trunc (/ a 1440)) "day")    " ago")
     #        (>= a   60) (pr (plural (trunc (/ a 60))   "hour")   " ago")
     #                    (pr (plural (trunc a)          "minute") " ago"))))
-    now = Date.now()
-
-    minute = 60 * 1000
-    hour   = 60 * minute
-    day    = 24 * hour
-
-    match = /([0-9]+) ([a-z]+) ago/.exec(str)
+    match = /([0-9]+) ((day)|(hour)|(minute))s? ago/.exec(str)
 
     return null unless match?
 
-    [_, num, scale] = match
+    [_, num, unit] = match
 
-    num = Number(num)
+    units =
+        minute:        60 * 1000
+        hour:     60 * 60 * 1000
+        day: 24 * 60 * 60 * 1000
 
-    switch scale
-        when "day", "days" then
-            diff = num * day
-
-        when "hour",   "hours"
-            diff = num * hour
-
-        when "minute", "minutes"
-            diff = num * minute
-
-        else return null
-
-    new Date(now - diff)
+    new Date Date.now() - (units[unit] * Number(num))
 
 smiley = (name) ->
-    eyes = "$^*@;TQs><?uveazoO096~"
+    eyes = "$^*@;TQs><?UuVveazoO096~pq"
 
     name_to_num = (str) ->
         total = 0
