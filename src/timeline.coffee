@@ -123,7 +123,7 @@ distinct = (arr, test) ->
 
     out = []
 
-    for i in arr when not out.some((item) -> test item, i)
+    for i in arr when not some.call(out, (item) -> test item, i)
         out.push(i)
 
     out
