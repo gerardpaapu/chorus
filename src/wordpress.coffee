@@ -18,6 +18,11 @@ class WordpressStatus extends Tweet
         {id, user, text, created_at} = json
         {screen_name, profile_image_url} = user
 
-        new WordpressStatus id, screen_name, profile_image_url, created_at, text, raw, reply
+        new WordpressStatus id, screen_name, profile_image_url, created_at, text, json, reply
+
+Timeline.shorthands.unshift {
+    pattern: /^WP:(.*)$/i,
+    fun: (_, name) -> return new WordpressTimeline(name)
+}
 
 extend Chorus, {WordpressTimeline, WordpressStatus}
