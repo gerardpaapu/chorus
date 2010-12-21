@@ -3,7 +3,7 @@ Keep up to the minute with Chorus
 
 Chorus is a jQuery library for fetching and displaying statuses in a webpage.
 
-Chorus &heart; Twitter
+Chorus &#9829; Twitter
 ---
 
 This is a quickstart guide, for more details checkout the technical overview.
@@ -13,8 +13,8 @@ Chorus started life as a twitter library, and it's still excellent for embedding
 To get started copy and paste these lines into the `<head>` of your document
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript" src="http://gerardpaapu.com/qorus/chorus_twitter.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="http://gerardpaapu.com/qorus/chorus.css" />
+    <script type="text/javascript" src="http://gerardpaapu.com/qorus/chorus.twitter.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="http://gerardpaapu.com/qorus/styles.css" />
     <script>
         jQuery(function ($) {
             // replace 'sharkbrain' with your username
@@ -29,23 +29,23 @@ And put this into your `<body>` wherever you want your timeline to show up
         <!-- Your timeline will appear here -->
     </div>
 
-If you're currently using the official twitter widget, you might find that chorus has more features, and is easier to customize.
+If you're currently using the official twitter widget, you might find that chorus has more
+features, and is easier to customize.
 
 For example you might want to use a list timeline instead of a user's timeline.
 
     $("#MyTweeple").chorus("@sharkbrain/my-tweeple");
 
-or you might want to display more tweets
-    
-    $("#MyTweets").chorus({
-        feeds: ["@sharkbrain"],
-        count: 30
-    });
-
-Chorus also supports Twitter search timelines.
+You can just as easily include a search timeline
 
     $("#AboutSharks").chorus("#sharks");
 
 And just for fun you can combine any number of timelines into a single view.
 
     $("#AllTweets").chorus("@sharkbrain", "@sharkbrain/my-tweeple", "#sharks");
+
+jQuery.timeago
+---
+
+For more friendly dates (like "4 days ago") that magically update like magic, just include the
+[jquery.timeago](http://timeago.yarp.com/) on the page and Chorus will take care of the rest.
