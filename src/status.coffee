@@ -41,7 +41,7 @@ class Status
         <a class="date"
            href="#{ @getUrl() }"
            title="#{ iso_datestring @date }">
-            #{ @date.toLocaleDateString() } 
+            #{ @date.toLocaleTimeString() } #{ @date.toLocaleDateString() }
         </a>"""
 
         if $.fn.timeago? then el.timeago() else el
