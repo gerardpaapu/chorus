@@ -41,6 +41,7 @@ task "compress", "compress the javascript files", ->
     invoke "compile"
 
     try
+        compress name for name in coffee_files
         compress "chorus.core"
         compress "chorus.github"
         compress "chorus.twitter"
