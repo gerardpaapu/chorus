@@ -40,6 +40,10 @@ You can just as easily include a search timeline
 
     $("#AboutSharks").chorus("#sharks");
 
+'about' timelines include tweets to and from the user in question
+
+    $("#AboutMe").chorus("@+sharkbrain");
+
 And just for fun you can combine any number of timelines into a single view.
 
     $("#AllTweets").chorus("@sharkbrain", "@sharkbrain/my-tweeple", "#sharks");
@@ -50,7 +54,7 @@ jQuery.timeago
 For more friendly dates (like "4 days ago") that magically update like magic, just include the
 [jquery.timeago](http://timeago.yarp.com/) on the page and Chorus will take care of the rest.
 
-Other Sources
+Chorus Modules
 --
 
 Chorus supports a bunch of sources other than twitter through modules.
@@ -93,3 +97,26 @@ The Github module follows commits on a project (and branch), it uses the shortha
         });
     </script> 
 
+### Friendfeed
+
+The friendfeed module includes a users friendfeed, it uses the shorthands "FF:{user}"
+
+    <script src="http://gerardpaapu.com/qorus/friendfeed.min.js" type="text/javascript"></script> 
+    <script>
+        jQuery(function ($) {
+            $("#OMGPaul").chorus("FF:paul");
+        });
+    </script> 
+
+### Wordpress
+
+Wordpress exposes a clone of the twitter api (which is super cool), so it requires the twitter module. It uses 
+the shorthand "WP:{username}.wordpress.com"
+
+    <script src="http://gerardpaapu.com/qorus/twitter.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/wordpress.min.js" type="text/javascript"></script> 
+    <script>
+        jQuery(function ($) {
+            $("#MyDeadOldBlog").chorus("WP:sharkbrainguy.wordpress.com");
+        });
+    </script> 
