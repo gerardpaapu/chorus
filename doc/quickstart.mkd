@@ -49,3 +49,47 @@ jQuery.timeago
 
 For more friendly dates (like "4 days ago") that magically update like magic, just include the
 [jquery.timeago](http://timeago.yarp.com/) on the page and Chorus will take care of the rest.
+
+Other Sources
+--
+
+Chorus supports a bunch of sources other than twitter through modules.
+
+Each of them depends on the `core` module, which you can include with
+    
+    <script src="http://gerardpaapu.com/qorus/chorus.core.min.js" type="text/javascript"></script> 
+
+### Facebook
+
+The facebook module supports user feeds via the shorthand "FB:{id}"
+
+    <script src="http://gerardpaapu.com/qorus/facebook.min.js" type="text/javascript"></script> 
+    <script>
+        jQuery(function ($) {
+            $("#MyFeed").chorus("FB:BarackObama");
+        });
+    </script> 
+
+### Hacker News
+
+The Hacker News module follows a user's posts using the (dangerously violent) [ihackernews api](http://api.ihackernews.com/).
+It uses the shorthand "HN:{username}".
+
+    <script src="http://gerardpaapu.com/qorus/facebook.min.js" type="text/javascript"></script> 
+    <script>
+        jQuery(function ($) {
+            $("#MyFeed").chorus("HN:paul", "HN:pg");
+        });
+    </script> 
+
+### Github
+
+The Github module follows commits on a project (and branch), it uses the shorthands "GH:{user}/{project}" and "GH:{user}/{project}/{branch}".
+
+    <script src="http://gerardpaapu.com/qorus/github.min.js" type="text/javascript"></script> 
+    <script>
+        jQuery(function ($) {
+            $("#Projects").chorus("GH:sharkbrainguy/qorus", "GH:mootools/mootools-core/2.0wip");
+        });
+    </script> 
+
