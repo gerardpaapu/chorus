@@ -17,7 +17,7 @@ task "compile", "compile all the coffee files to js", ->
 
     try
         compile file for file in coffee_files
-
+        compile_less "styles"
         concat "subscriber", "status", "timeline", "core"
         concat "core", "twitter", "github", "qorus"
         console.log "compilation succeeded"
@@ -79,3 +79,14 @@ concat = (files..., out) ->
         readFileSync "dist/#{file}.js"
 
     writeFileSync "dist/#{out}.js", src.join("\n")
+
+compile_less = (name) ->
+    less = require "less"
+    src = readFileSync "src/#{name}.less", "utf-8"
+
+    less.render src, (errs, css) ->
+        if errs
+            console.log "error compiling #{name}.less:\n #{errs}"
+        else
+            writeFileSync "dist/#{name}.css", css
+            console.log "compile #{name}.less"
