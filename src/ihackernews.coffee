@@ -72,7 +72,7 @@ parse_date = (str) ->
     new Date Date.now() - (units[unit] * Number(num))
 
 smiley = (name) ->
-    eyes = "$^*@;TQs><?UuVveazoO096~pq"
+    eyes = "$^*@;TQ><?UuVveazoO096~pq"
 
     name_to_num = (str) ->
         total = 0

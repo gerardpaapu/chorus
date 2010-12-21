@@ -6,10 +6,6 @@ Chorus is a jQuery library for fetching and displaying statuses in a webpage.
 Chorus &#9829; Twitter
 ---
 
-This is a quickstart guide for using Chorus with twitter. For the gory details check out the technical overview.
-
-To use Chorus with other services, scroll down to "Chorus Modules".
-
 Chorus started life as a twitter library, and it's still excellent for embedding twitter feeds.
 
 All these examples use scripts hosted on my server, for reliability you should host copies of them on your 

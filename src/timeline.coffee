@@ -4,6 +4,7 @@
 class Timeline extends Publisher
     constructor: (options) ->
         @options = extend {}, @options, options
+        @statuses = []
         if @options.updateOnStart then @update()
         if @options.updatePeriod  then @startUpdates()
 
@@ -53,6 +54,8 @@ class View extends Subscriber
     constructor: (options) ->
         @options = extend {}, @options, options
         @subscribe feed for feed in @options.feeds
+
+        @statuses = []
 
         if @options.container?
             @toElement().appendTo @options.container
