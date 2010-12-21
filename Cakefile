@@ -18,8 +18,12 @@ task "compile", "compile all the coffee files to js", ->
     try
         compile file for file in coffee_files
         compile_less "styles"
-        concat "subscriber", "status", "timeline", "core"
-        concat "core", "twitter", "github", "qorus"
+        concat "subscriber", "status", "timeline", "chorus.core"
+        concat "chorus.core", "twitter", "chorus.twitter"
+        concat "chorus.core", "twitter", "wordpress", "chorus.wordpress"
+        concat "chorus.core", "friendfeed", "chorus.friendfeed"
+        concat "chorus.core", "github", "chorus.github"
+        concat "chorus.core", "facebook", "chorus.facebook"
         console.log "compilation succeeded"
 
     catch err
@@ -37,8 +41,11 @@ task "compress", "compress the javascript files", ->
     invoke "compile"
 
     try
-        compress "core"
-        compress "qorus"
+        compress "chorus.core"
+        compress "chorus.github"
+        compress "chorus.twitter"
+        compress "chorus.facebook"
+        compress "chorus.friendfeed"
         console.log "compression succeeded"
 
     catch err
