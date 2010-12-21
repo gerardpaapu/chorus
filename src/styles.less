@@ -1,0 +1,123 @@
+.chorus_view { 
+    font-size: 12px;
+    line-height: 1.4;
+    width: 30em;
+    margin: 10px auto;
+    padding: 1em 0;
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    border-radius: 0.5em;
+    background: white;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    background-clip: padding-box;
+    overflow: hidden;
+
+    a:link,
+    a:visited {
+        color: #2fc2ef;
+        text-decoration: none; 
+    }
+
+    a:hover,
+    a:active {
+        text-decoration: underline; 
+    }
+
+    .status {
+        border-top: solid 1px #ddd;
+        padding: 10px 20px 10px 83px;
+
+        &:first-child { border-top: none; }
+
+        &:after {
+            content: ".";
+            display: block;
+            clear: both;
+            visibility: hidden;
+            height: 0px;
+            overflow: hidden;
+        }
+
+        a.avatar {
+            margin: 0 0 0 -58px;
+            border-radius: 4px;
+            background: #333;
+            font-size: 26px;
+            text-align: center;
+            vertical-align: center;
+            
+            -webkit-box-shadow: 0 0 2px black;
+            -moz-box-shadow: 0 0 2px black;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+
+            -webkit-background-clip: padding-box;
+            -moz-background-clip: padding;
+            background-clip: padding-box;
+        }
+
+        .avatar {
+            display: block;
+            float: left;
+            height: 48px; width: 48px;
+            overflow: hidden;
+        }
+
+        a.avatar:hover,
+        a.avatar:active {
+            text-decoration: none;
+        }
+
+        .username { font-weight: bold; }
+
+        .username:link,
+        .username:visited,
+        .date:link,
+        .date:visited {
+            color: black;
+        }
+
+        .username:hover,
+        .username:active,
+        .date:link,
+        .date:visited,
+        .reply:link,
+        .reply:visited { color: #555; }
+
+        .date:hover,
+        .date:active,
+        .reply:hover,
+        .reply:active { text-decoration: underline; }
+
+
+        .statusBody { margin: 0 0 10px; }
+
+        .extras { padding: 5px 0; }
+
+        .embed,
+        a.embed > img {
+            display: block;
+            float: left;
+            margin: 0 5px 5px 0;
+        }
+
+        .comments { 
+            clear: both;
+            padding-top: 10px;
+            font-size: 10px;
+            color: #555;
+        }
+
+        .comment {
+            padding: 0.5em 0;
+
+            .username {
+                display: inline;
+                margin: 0; padding: 0;
+            }
+        }
+    }
+}

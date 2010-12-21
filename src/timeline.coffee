@@ -86,7 +86,7 @@ class View extends Subscriber
     subscribe: (source) -> super Timeline.from(source)
 
     toElement: ->
-        element = $ '<div class="view chorusview" />'
+        element = $ '<div class="view chorus_view" />'
 
         @bind 'update', => @updateElement element
         @updateElement element
