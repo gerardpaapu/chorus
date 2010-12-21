@@ -84,7 +84,7 @@ The facebook module supports user feeds via the shorthand "FB:{id}"
 The Hacker News module follows a user's posts using the (dangerously violent) [ihackernews api](http://api.ihackernews.com/).
 It uses the shorthand "HN:{username}".
 
-    <script src="http://gerardpaapu.com/qorus/facebook.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/ihackernews.min.js" type="text/javascript"></script> 
     <script>
         jQuery(function ($) {
             $("#MyFeed").chorus("HN:paul", "HN:pg");
