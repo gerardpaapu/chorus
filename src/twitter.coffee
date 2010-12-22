@@ -111,12 +111,13 @@ class TwitterListTimeline extends TwitterTimeline
 
 class TwitterAboutTimeline extends TwitterTimeline
     constructor: (screenname, options) ->
+        @statuses = []
         @user = new TwitterUserTimeline screenname, options
         @search = new TwitterSearchTimeline "to:" + screenname
-        @subscriber = new Subscriber
+        @subscriber = new Subscriber()
         @subscriber.subscribe @user
         @subscriber.subscribe @search
-        @subscriber.update = (data, source) => @publish data
+        @subscriber.update = (data, source) => @prePublish data, source
 
 datefix = (str) ->
     # Twitter seems to give some wacky date format

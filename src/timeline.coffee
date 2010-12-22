@@ -13,7 +13,7 @@ class Timeline extends Publisher
         updateOnStart: true
         updatePeriod: 90000
 
-    statuses: []
+    statuses: null
     latest: null
     timer: null
 
@@ -54,7 +54,6 @@ class View extends Subscriber
     constructor: (options) ->
         @options = extend {}, @options, options
         @subscribe feed for feed in @options.feeds
-
         @statuses = []
 
         if @options.container?
@@ -73,18 +72,18 @@ class View extends Subscriber
 
        cache[status.toKey()] ?= status.toElement(options)
 
-    statuses: []
+    statuses: null
     htmlCache: null
 
     update: (data, source) ->
         statuses = []
         count = @options.count
+        if source.statuses?
+            @statuses.push source.statuses[0..count]...
+            @statuses = sortStatuses(@statuses)
+            @statuses = @statuses[0..count]
 
-        @statuses.push source.statuses[0..count]...
-        @statuses = sortStatuses(@statuses)
-        @statuses = @statuses[0..count]
-
-        @trigger 'update'
+            @trigger 'update'
 
     subscribe: (source) -> super Timeline.from(source)
 
