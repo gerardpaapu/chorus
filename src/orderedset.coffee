@@ -1,9 +1,7 @@
-_some = (fn) ->
+some = Array::some ?  (fn) ->
     return true for i in this when fn(i)
 
     false
-
-some = Array::some ? _some
 
 class OrderedSet
     ## A Set of items ordered so that:
@@ -15,22 +13,18 @@ class OrderedSet
     ##   equal(a, b)
     constructor: (@items = [], unique = no, sorted = no) ->
         if not unique
-            @uniqify()
+            @__uniqify__()
         else if not sorted
-            @sort()
+            @__sort__()
 
         @length = @items.length
 
     __constructor__: OrderedSet
 
-    contains: (item) ->
-        some.call @items, (a) => @equal a, item
-
-    sort: ->
+    __sort__: ->
         @items.sort (a, b) => if @greater(b, a) then 1 else -1
-        return this
 
-    uniqify: ->
+    __uniqify__: ->
         # enforce the policy that no two
         # items (a, b) should be @equal(a, b)
         _items = @items
@@ -39,8 +33,10 @@ class OrderedSet
         for item in _items
             @items.push item unless @contains item
 
-        @sort()
-        return this
+        @__sort__()
+
+    contains: (item) ->
+        some.call @items, (a) => @equal a, item
 
     addOne: (item) ->
         if @contains item
@@ -49,6 +45,7 @@ class OrderedSet
             new @__constructor__ @items.concat([item]), yes
 
     add: (items...) ->
+        # add each of the arguments to the set
         set = this
 
         for item in items
@@ -56,19 +53,21 @@ class OrderedSet
 
         return set
 
-    concat: (items) ->
+    concat: (ls) ->
+        # add a collection of items to the set
         if items instanceof OrderedSet
-            @add items.items...
+            @add ls.items...
         else
-            @add items...
+            @add ls...
 
+    # set.item(i) -> array[i]
     item: (n) -> @items[n]
 
     toArray: -> @items[0..]
 
     slice: -> @items.slice arguments...
 
-    equal:   (a, b) -> a is b
+    equal: (a, b) -> a is b
 
     greater: (a, b) -> b > a
 
