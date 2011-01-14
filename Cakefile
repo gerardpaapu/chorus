@@ -1,6 +1,7 @@
 {readFileSync, writeFileSync} = fs = require "fs"
 
 coffee_files = [
+    "orderedset",
     "subscriber",
     "status",
     "timeline",
@@ -18,7 +19,7 @@ task "compile", "compile all the coffee files to js", ->
     try
         compile file for file in coffee_files
         compile_less "styles"
-        concat "subscriber", "status", "timeline", "chorus.core"
+        concat "subscriber", "orderedset", "status", "timeline", "chorus.core"
         concat "chorus.core", "twitter", "chorus.twitter"
         concat "chorus.core", "twitter", "wordpress", "chorus.wordpress"
         concat "chorus.core", "friendfeed", "chorus.friendfeed"

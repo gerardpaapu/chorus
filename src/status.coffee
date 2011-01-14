@@ -36,7 +36,7 @@ class Status
             <img src="#{@getAvatar()}" class="avatar" />
         </a>"""
 
-    renderTimestamp: -> 
+    renderTimestamp: ->
         el = $ """
         <a class="date"
            href="#{ @getUrl() }"
@@ -71,4 +71,12 @@ iso_datestring = (d) ->
 
     "#{year}-#{month}-#{day}T#{hours}:#{minutes}:#{seconds}Z"
 
+class Statuses extends @Chorus.OrderedSet
+    __constructor__: Statuses
+
+    greater: (a, b) -> a.date > b.date
+
+    equal: Status.equal
+
 @Chorus.Status = Status
+@Chorus.Statuses = Statuses

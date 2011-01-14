@@ -5,40 +5,71 @@ _some = (fn) ->
 
 some = Array::some ? _some
 
-class OrderedSet extends Events
-    constructor: (@equal, @greater) ->
-        @equal   ?= (a, b) -> a is b
-        @greater ?= (a, b) -> b > a
+class OrderedSet
+    ## A Set of items ordered so that:
+    ##
+    ##   greater(item(n + 1), item(n)) 
+    ##
+    ## and that for no two items `a` and `b`:
+    ##    
+    ##   equal(a, b)
+    constructor: (@items = [], unique = no, sorted = no) ->
+        if not unique
+            @uniqify()
+        else if not sorted
+            @sort()
+
+        @length = @items.length
+
+    __constructor__: OrderedSet
+
+    contains: (item) ->
+        some.call @items, (a) => @equal a, item
+
+    sort: ->
+        @items.sort (a, b) => if @greater(b, a) then 1 else -1
+        return this
+
+    uniqify: ->
+        # enforce the policy that no two
+        # items (a, b) should be @equal(a, b)
+        _items = @items
         @items = []
 
+        for item in _items
+            @items.push item unless @contains item
+
+        @sort()
+        return this
+
+    addOne: (item) ->
+        if @contains item
+            this
+        else
+            new @__constructor__ @items.concat([item]), yes
+
     add: (items...) ->
-        new_items = []
-        equal   = @equal
-        greater = @greater
+        set = this
 
-        contains = (arr, item) ->
-            some.call arr, (a) -> equal a, item
+        for item in items
+            set = set.addOne item
 
-        is_new = (item) ->
-            !( contains(new_items, item) or contains(@items, item) )
+        return set
 
-        for item in items when is_new item
-            new_items.push item
-
-        if new_items.length > 0
-            items = @items.concat [new_items]
-
-            items.sort (a, b) ->
-                if greater(b, a) then -1 else 1
-
-            @items = items
-
-            @trigger 'update', this, new_items
+    concat: (items) ->
+        if items instanceof OrderedSet
+            @add items.items...
+        else
+            @add items...
 
     item: (n) -> @items[n]
 
-    take: (n = @items.length - 1) -> @items[..n]
+    toArray: -> @items[0..]
 
-    drop: (n = 0) -> @items[n..]
+    slice: -> @items.slice arguments...
 
-    slice: (a, b) -> @items[a..b]
+    equal:   (a, b) -> a is b
+
+    greater: (a, b) -> b > a
+
+@Chorus.OrderedSet = OrderedSet
