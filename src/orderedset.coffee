@@ -55,7 +55,7 @@ class OrderedSet
 
     concat: (ls) ->
         # add a collection of items to the set
-        if items instanceof OrderedSet
+        if ls instanceof OrderedSet
             @add ls.items...
         else
             @add ls...
