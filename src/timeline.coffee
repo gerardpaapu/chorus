@@ -1,10 +1,10 @@
 {inArray, makeArray, extend} = $ = jQuery
-{Publisher, Subscriber, Status} = Chorus = @Chorus
+{Publisher, Subscriber, Status, Statuses} = Chorus = @Chorus
 
 class Timeline extends Publisher
     constructor: (options) ->
         @options = extend {}, @options, options
-        @statuses = []
+
         if @options.updateOnStart then @update()
         if @options.updatePeriod  then @startUpdates()
 
@@ -13,7 +13,7 @@ class Timeline extends Publisher
         updateOnStart: true
         updatePeriod: 90000
 
-    statuses: null
+    statuses: new Statuses()
     latest: null
     timer: null
 
@@ -31,9 +31,8 @@ class Timeline extends Publisher
         statuses = ( s for s in this.statusesFromData(data) when @isNew s )
 
         if statuses.length > 0
-            @statuses.push statuses...
-            @statuses = sortStatuses(@statuses)
-            @latest = @statuses[0]
+            @statuses = @statuses.concat statuses
+            @latest = @statuses.item 0
             @publish @statuses
 
     isNew: (status) ->
@@ -54,7 +53,6 @@ class View extends Subscriber
     constructor: (options) ->
         @options = extend {}, @options, options
         @subscribe feed for feed in @options.feeds
-        @statuses = []
 
         if @options.container?
             @toElement().appendTo @options.container
@@ -72,17 +70,15 @@ class View extends Subscriber
 
        cache[status.toKey()] ?= status.toElement(options)
 
-    statuses: null
+    statuses: new Statuses()
     htmlCache: null
 
     update: (data, source) ->
-        statuses = []
-        count = @options.count
-        if source.statuses?
-            @statuses.push source.statuses[0..count]...
-            @statuses = sortStatuses(@statuses)
-            @statuses = @statuses[0..count]
+        new_statuses = source.statuses.slice(0, @options.count)
+        statuses = @statuses.concat new_statuses
 
+        if statuses != @statuses
+            @statuses = statuses
             @trigger 'update'
 
     subscribe: (source) -> super Timeline.from(source)
@@ -95,7 +91,8 @@ class View extends Subscriber
         element.data 'View', this
 
     updateElement: (element) ->
-        children = (@renderStatus status for status in @statuses)
+        statuses = @statuses.slice 0, @options.count
+        children = (@renderStatus status for status in statuses)
         element.empty().append children...
 
     renderStatus: (status) ->
@@ -107,28 +104,6 @@ class View extends Subscriber
             @htmlCache[key] = status.toElement(@options.renderOptions)
 
         @htmlCache[key]
-
-sortStatuses = (statuses) ->
-    arr = Array::slice.call(statuses)
-    arr.sort(Status.byDate)
-    distinct(arr, Status.equal)
-
-distinct = (arr, test) ->
-    test ?= (a, b) -> a is b
-
-    _some = (fn) ->
-        return true for i in this when fn(i)
-
-        false
-
-    some = Array::some ? _some
-
-    out = []
-
-    for i in arr when not some.call(out, (item) -> test item, i)
-        out.push(i)
-
-    out
 
 extend Chorus, {Timeline, View}
 
