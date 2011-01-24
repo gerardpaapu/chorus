@@ -3,6 +3,8 @@
 
 class FacebookStatus extends Status
     constructor: (id, username, avatar, date, text, raw, @userid) ->
+        date = new Date().setISO8601(date)
+
         super id, username, avatar, date, text, raw
 
     getStreamUrl: -> "http://facebook.com/profile.php?id=#{@userid}"
@@ -33,7 +35,7 @@ class FacebookStatus extends Status
         id = match and match[1]
         link = data.source or data.link
         text = data.message ? ''
-        if link? then text += """ <a href="#{link}">#{data.name}</a>"""
+        if link? then text += """ <a href="#{link}">#{ data.name or 'link' }</a>"""
 
         new FacebookStatus id, data.from.name, null, data.created_time, text, data, data.from.id
 
@@ -61,5 +63,37 @@ class FacebookTimeline extends Timeline
 Timeline.shorthands.unshift
     pattern: /^FB:(.*)$/
     fun: (_, name) -> new FacebookTimeline name
+
+`Date.prototype.setISO8601 = function(dString){
+    var regexp = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/,
+        d = dString.match(regexp);
+
+    if (d != null) {
+        var offset = 0;
+        this.setUTCDate(1);
+        this.setUTCFullYear(parseInt(d[1],10));
+        this.setUTCMonth(parseInt(d[3],10) - 1);
+        this.setUTCDate(parseInt(d[5],10));
+        this.setUTCHours(parseInt(d[7],10));
+        this.setUTCMinutes(parseInt(d[9],10));
+        this.setUTCSeconds(parseInt(d[11],10));
+
+        if (d[12]) {
+            this.setUTCMilliseconds(parseFloat(d[12]) * 1000);
+        } else {
+            this.setUTCMilliseconds(0);
+        }
+
+        if (d[13] != 'Z') {
+            offset = (d[15] * 60) + parseInt(d[17],10);
+            offset *= ((d[14] == '-') ? -1 : 1);
+            this.setTime(this.getTime() - offset * 60 * 1000);
+        }
+    } else {
+        this.setTime(Date.parse(dString));
+    }
+
+    return this;
+};`
 
 extend Chorus, {FacebookStatus, FacebookTimeline}
