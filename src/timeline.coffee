@@ -33,7 +33,7 @@ class Timeline extends Publisher
         if statuses.length > 0
             @statuses = @statuses.concat statuses
             @latest = @statuses.item 0
-            @publish @statuses
+            @publish @statuses.toArray()
 
     isNew: (status) ->
         !@latest or status.date.getTime() > @latest.date.getTime()
