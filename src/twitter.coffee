@@ -111,7 +111,6 @@ class TwitterListTimeline extends TwitterTimeline
 
 class TwitterAboutTimeline extends TwitterTimeline
     constructor: (screenname, options) ->
-        @statuses = []
         @user = new TwitterUserTimeline screenname, options
         @search = new TwitterSearchTimeline "to:" + screenname
         @subscriber = new Subscriber()
