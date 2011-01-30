@@ -35,9 +35,10 @@ class FacebookStatus extends Status
         id = match and match[1]
         link = data.source or data.link
         text = data.message ? ''
+        from = data.from ? name: 'anonymous', id: null
         if link? then text += """ <a href="#{link}">#{ data.name or 'link' }</a>"""
 
-        new FacebookStatus id, data.from.name, null, data.created_time, text, data, data.from.id
+        new FacebookStatus id, from.name, null, data.created_time, text, data, from.id
 
 renderComment = (data) ->
     url = FacebookStatus::getStreamUrl.call {userid: data.from.id}
