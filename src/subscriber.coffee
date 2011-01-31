@@ -1,5 +1,5 @@
 Chorus = @Chorus ?= {}
-{extend, inArray} = $ = jQuery
+{inArray, makeArray, extend} = $ = jQuery
 
 class PubSub
     __subscribers__: []

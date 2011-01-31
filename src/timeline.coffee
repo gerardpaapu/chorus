@@ -1,6 +1,3 @@
-{inArray, makeArray, extend} = $ = jQuery
-{PubSub, Status, Statuses} = Chorus = @Chorus
-
 class Timeline extends PubSub
     constructor: (options) ->
         @options = extend {}, @options, options

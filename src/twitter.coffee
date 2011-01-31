@@ -114,9 +114,8 @@ class TwitterAboutTimeline extends TwitterTimeline
         @user = new TwitterUserTimeline screenname, options
         @search = new TwitterSearchTimeline "to:" + screenname
         @subscriber = new Chorus.PubSub()
-        @subscriber.subscribe @user
-        @subscriber.subscribe @search
-        @subscriber.update = (data, source) => @update data, source
+        @subscribe @user
+        @subscribe @search
 
 datefix = (str) ->
     # Twitter seems to give some wacky date format
