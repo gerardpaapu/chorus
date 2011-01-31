@@ -1,11 +1,11 @@
 {inArray, makeArray, extend} = $ = jQuery
-{Publisher, Subscriber, Status, Statuses} = Chorus = @Chorus
+{PubSub, Status, Statuses} = Chorus = @Chorus
 
-class Timeline extends Publisher
+class Timeline extends PubSub
     constructor: (options) ->
         @options = extend {}, @options, options
 
-        if @options.updateOnStart then @update()
+        if @options.updateOnStart then @fetch()
         if @options.updatePeriod  then @startUpdates()
 
     options:
@@ -14,20 +14,21 @@ class Timeline extends Publisher
         updatePeriod: 90000
 
     statuses: new Statuses()
+    subscribers: []
     latest: null
     timer: null
 
-    update: -> throw Error "Not Implemented"
+    fetch: -> throw Error "Not Implemented"
 
     startUpdates: (period) ->
         period ?= @options.updatePeriod
-        @timer = setInterval (=> @update()), period
+        @timer = setInterval (=> @fetch()), period
 
     stopUpdates: ->
         clearInterval @timer
         @timer = null
 
-    prePublish: (data) ->
+    update: (data, source) ->
         statuses = ( s for s in this.statusesFromData(data) when @isNew s )
 
         if statuses.length > 0
@@ -49,7 +50,7 @@ class Timeline extends Publisher
 
         null
 
-class View extends Subscriber
+class View extends PubSub
     constructor: (options) ->
         @options = extend {}, @options, options
         @subscribe feed for feed in @options.feeds
@@ -71,7 +72,10 @@ class View extends Subscriber
        cache[status.toKey()] ?= status.toElement(options)
 
     statuses: new Statuses()
+
     htmlCache: null
+
+    subscribe: (pub) -> super Timeline.from(pub)
 
     update: (data, source) ->
         new_statuses = source.statuses.slice(0, @options.count)
@@ -79,14 +83,12 @@ class View extends Subscriber
 
         if statuses != @statuses
             @statuses = statuses
-            @trigger 'update'
-
-    subscribe: (source) -> super Timeline.from(source)
+            @publish statuses
 
     toElement: ->
         element = $ '<div class="view chorus_view" />'
 
-        @bind 'update', => @updateElement element
+        PubSub.bind this, => @updateElement element
         @updateElement element
         element.data 'View', this
 

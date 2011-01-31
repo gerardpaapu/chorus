@@ -60,7 +60,7 @@ class Tweet extends Status
         return placeholder || null
 
 class TwitterTimeline extends Timeline
-    update: (n) ->
+    fetch: (n) ->
         data = extend {}, @sendData
 
         if @latest then data.since_id = @latest.id
@@ -69,7 +69,7 @@ class TwitterTimeline extends Timeline
             url: @queryUrl
             data: data
             dataType: 'jsonp'
-            success: (data) => @prePublish data
+            success: (data) => @update data
 
     queryUrl: "http://api.twitter.com/1/statuses/public_timeline.json"
 
@@ -98,7 +98,7 @@ class TwitterSearchTimeline extends TwitterTimeline
 
     queryUrl: "http://search.twitter.com/search.json"
 
-    prePublish: (data) ->
+    update: (data) ->
         if data.results? then super data.results
 
 class TwitterListTimeline extends TwitterTimeline
@@ -113,10 +113,10 @@ class TwitterAboutTimeline extends TwitterTimeline
     constructor: (screenname, options) ->
         @user = new TwitterUserTimeline screenname, options
         @search = new TwitterSearchTimeline "to:" + screenname
-        @subscriber = new Subscriber()
+        @subscriber = new Chorus.PubSub()
         @subscriber.subscribe @user
         @subscriber.subscribe @search
-        @subscriber.update = (data, source) => @prePublish data, source
+        @subscriber.update = (data, source) => @publish data, source
 
 datefix = (str) ->
     # Twitter seems to give some wacky date format

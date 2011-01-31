@@ -1,70 +1,38 @@
 Chorus = @Chorus ?= {}
 {extend, inArray} = $ = jQuery
 
-class Events
-    bind: (ev, callback) ->
-        @_callbacks ?= {}
-        list = @_callbacks[ev] ?= []
-        list.push callback
+class PubSub
+    __subscribers__: []
+
+    subscribe: (publisher) -> publisher.addSubscriber this
+
+    unsubscribe: (publisher) ->
+        publisher.removeSubscriber this
+        this
+
+    publish: (data) ->
+        sub.update(data, this) for sub in @__subscribers__
+        this
+
+    update: -> this
+
+    addSubscriber: (subscriber) ->
+        if inArray(@__subscribers__, subscriber) is -1
+            @__subscribers__ = @__subscribers__.concat [ subscriber ] 
 
         this
 
-    unbind: (ev, callback) ->
-        if not ev?
-            # remove all callbacks
-            @_callbacks = {}
+    removeSubscriber: (subscriber) ->
+        index = inArray(@__subscribers__, subscriber)
+        @__subscribers__.splice(index, 1) unless index is -1
 
-        if not callback?
-            # if no callback is passed
-            # unbind all events of this type
-            @_callbacks[ev] = []
+    @bind: (object, fn) ->
+        listener = new PubSub()
+        listener.update = (data, src) ->
+            fn data
+            @publish data
 
-        else
-            list = @_callbacks[ev]
-            index = inArray list, callback
+        listener.subscribe object
+        listener
 
-            list.splice index, 1 unless index is -1
-
-        this
-
-    trigger: (ev, args...) ->
-        return this unless @_callbacks?
-
-        if (list = @_callbacks[ev])?
-            fn args... for fn in list
-
-        if (list = @_callbacks.all)?
-            fn args... for fn in list
-
-        return this
-
-class Subscription
-    constructor: (@publisher, @subscriber, @type='update') ->
-        @callback = (data) =>
-            @subscriber.update data, @publisher
-
-        @publisher.bind @type, @callback
-
-    cancel: ->
-        @publisher.unbind @type, @callback
-
-class Subscriber extends Events
-    subscribe: (publisher) ->
-        @subscriptions.push(new Subscription publisher, this)
-
-    subscriptions: []
-
-    unsubscribe: (subscription) ->
-        index = inArray @subscriptions, subscription
-        if index isnt -1
-            @subscription.splice index, 1
-            subscription.cancel()
-
-    update: (data, source) ->
-        this
-
-class Publisher extends Events
-    publish: (data, type='update') ->
-        @trigger type, data
-
-extend Chorus, {Subscriber, Subscription, Publisher}
+Chorus.PubSub = PubSub
