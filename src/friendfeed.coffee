@@ -31,12 +31,12 @@ class FriendFeedTimeline extends Timeline
 
         super options
 
-    update: ->
+    fetch: ->
         $.ajax
             url: @queryUrl
             data: @sendData
             dataType: 'jsonp'
-            success: (json) => @prePublish json
+            success: (json) => @update json
 
     statusesFromData: (json) ->
         FriendfeedStatus.from entry for entry in json.entries

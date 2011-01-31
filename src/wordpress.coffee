@@ -3,7 +3,7 @@
 
 class WordpressTimeline extends TwitterUserTimeline
     queryUrl: "http://twitter-api.wordpress.com/statuses/user_timeline.json"
-    prePublish: (data) ->
+    update: (data) ->
         super (WordpressStatus.from item for item in data)
 
 class WordpressStatus extends Tweet

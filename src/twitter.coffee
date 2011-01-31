@@ -116,7 +116,7 @@ class TwitterAboutTimeline extends TwitterTimeline
         @subscriber = new Chorus.PubSub()
         @subscriber.subscribe @user
         @subscriber.subscribe @search
-        @subscriber.update = (data, source) => @publish data, source
+        @subscriber.update = (data, source) => @update data, source
 
 datefix = (str) ->
     # Twitter seems to give some wacky date format

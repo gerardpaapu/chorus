@@ -21,10 +21,10 @@ class GithubCommits extends Timeline
         @queryUrl += "/#{@username}/#{@repo}/#{options?.branch ? 'master'}"
         super options
 
-    update: -> jQuery.ajax
+    fetch: -> jQuery.ajax
         url: @queryUrl
         dataType: "jsonp"
-        success: (data) => @prePublish data
+        success: (data) => @update data
 
     statusesFromData: (data) -> GithubCommit.from item for item in data.commits
 

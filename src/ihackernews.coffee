@@ -36,12 +36,12 @@ class HNUserComments extends Timeline
     constructor: (@userid, options) ->
         super options
 
-    update: ->
+    fetch: ->
         jQuery.ajax
             url: "http://api.ihackernews.com/threads/#{@userid}"
             data: { format: 'jsonp'}
             dataType: 'jsonp'
-            success: (data) => @prePublish data
+            success: (data) => @update data
 
     statusesFromData: (data) ->
         HNComment.from item for item in data.comments

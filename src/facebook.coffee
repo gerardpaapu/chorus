@@ -53,11 +53,11 @@ class FacebookTimeline extends Timeline
         @queryUrl = "https://graph.facebook.com/#{@username}/feed"
         super options
 
-    update: (n) ->
+    fetch: (n) ->
         jQuery.ajax
             url: @queryUrl
             dataType: 'jsonp'
-            success: (data) => @prePublish data
+            success: (data) => @update data
 
     statusesFromData: (json) -> FacebookStatus.from item for item in json.data
 
