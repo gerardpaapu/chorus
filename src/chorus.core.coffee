@@ -128,7 +128,7 @@ class PubSub
 
     addSubscriber: (subscriber) ->
         if inArray(@__subscribers__, subscriber) is -1
-            @__subscribers__ = @__subscribers__.concat [ subscriber ] 
+            @__subscribers__ = @__subscribers__.concat [ subscriber ]
 
         this
 
@@ -326,8 +326,13 @@ class View extends PubSub
 
         @htmlCache[key]
 
-extend Chorus, {Timeline, View}
-extend Chorus, {Status, OrderedSet, PubSub}
+extend Chorus, {
+    OrderedSet,
+    PubSub,
+    Timeline,
+    View,
+    Status
+}
 
 $.fn.chorus = (arg) ->
     view = switch Object::toString.call arg
