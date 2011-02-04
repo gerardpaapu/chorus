@@ -1,0 +1,10 @@
+#!/bin/bash
+# 
+# I'm using this script to monitor the size of
+# the minified source of chorus.core plus the
+# twitter module, which I consider to be a core 
+# metric
+
+cake compress > /dev/null
+wc -c dist/chorus.twitter.min.js
+gzip -c dist/chorus.twitter.min.js | wc -c

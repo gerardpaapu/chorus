@@ -1,10 +1,7 @@
 {readFileSync, writeFileSync} = fs = require "fs"
 
 coffee_files = [
-    "orderedset",
-    "subscriber",
-    "status",
-    "timeline",
+    "chorus.core",
     "twitter",
     "facebook",
     "friendfeed",
@@ -19,15 +16,11 @@ task "compile", "compile all the coffee files to js", ->
     try
         compile file for file in coffee_files
         compile_less "styles"
-        # concat_js "subscriber", "orderedset", "status", "timeline", "chorus.core"
-
-        concat "src/subscriber.coffee", "src/orderedset.coffee", "src/status.coffee", "src/timeline.coffee", "src/chorus.core.coffee"
-        compile "chorus.core"
-        concat_js "chorus.core", "twitter", "chorus.twitter"
-        concat_js "chorus.core", "twitter", "wordpress", "chorus.wordpress"
-        concat_js "chorus.core", "friendfeed", "chorus.friendfeed"
-        concat_js "chorus.core", "github", "chorus.github"
-        concat_js "chorus.core", "facebook", "chorus.facebook"
+        concat "chorus.core", "twitter", "chorus.twitter"
+        concat "chorus.core", "twitter", "wordpress", "chorus.wordpress"
+        concat "chorus.core", "friendfeed", "chorus.friendfeed"
+        concat "chorus.core", "github", "chorus.github"
+        concat "chorus.core", "facebook", "chorus.facebook"
         console.log "compilation succeeded"
 
     catch err
@@ -86,17 +79,11 @@ compress = (name) ->
         console.log "failed to compress #{name}"
         throw err
 
-concat_js = (files..., out) ->
+concat = (files..., out) ->
     src = for file in files
         readFileSync "dist/#{file}.js"
 
     writeFileSync "dist/#{out}.js", src.join("\n")
-
-concat = (files..., out) ->
-    src = for file in files
-        readFileSync file
-
-    writeFileSync out, src.join("\n")
 
 compile_less = (name) ->
     less = require "less"
