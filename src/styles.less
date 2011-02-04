@@ -1,20 +1,45 @@
+.border-radius (@options: 0.5em) {
+    -moz-border-radius: @options;
+    -webkit-border-radius: @options;
+    border-radius: @options;
+}
+
+.clip-to-padding () {
+    background-clip: padding-box;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+}
+
+.box-shadow (@options: 0 0 5px black) {
+    -webkit-box-shadow: @options;
+    -moz-box-shadow: @options;
+    box-shadow: @options;
+}
+
+.clearfix () {
+    min-height: 1%;
+
+    &:after {
+        content: ".";
+        display: block;
+        clear: both;
+        visibility: hidden;
+        height: 0px;
+        overflow: hidden;
+    }
+}
+
 .chorus_view { 
     font-size: 12px;
     line-height: 1.4;
     width: 30em;
     margin: 10px auto;
     padding: 1em 0;
-    -moz-border-radius: 0.5em;
-    -webkit-border-radius: 0.5em;
-    border-radius: 0.5em;
     background: white;
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
-    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-    background-clip: padding-box;
     overflow: hidden;
+    .box-shadow(0 0 8px rgba(0, 0, 0, 0.4));
+    .border-radius(0.5em);
+    .clip-to-padding;
 
     a:link,
     a:visited {
@@ -30,33 +55,20 @@
     .status {
         border-top: solid 1px #ddd;
         padding: 10px 20px 10px 83px;
+        .clearfix;
 
         &:first-child { border-top: none; }
 
-        &:after {
-            content: ".";
-            display: block;
-            clear: both;
-            visibility: hidden;
-            height: 0px;
-            overflow: hidden;
-        }
-
         a.avatar {
             margin: 0 0 0 -58px;
-            border-radius: 4px;
             background: #333;
             font-size: 26px;
             text-align: center;
             vertical-align: center;
             
-            -webkit-box-shadow: 0 0 2px black;
-            -moz-box-shadow: 0 0 2px black;
-            box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-
-            -webkit-background-clip: padding-box;
-            -moz-background-clip: padding;
-            background-clip: padding-box;
+            .box-shadow(0 0 2px rgba(0, 0, 0, 0.6));
+            .border-radius(4px);
+            .clip-to-padding;
         }
 
         .avatar {
