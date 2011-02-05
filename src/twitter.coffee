@@ -130,7 +130,7 @@ linkify = (str) ->
         .replace(/(\s|^)@(\w+)/g, '$1<a class="mention" href="http://twitter.com/$2">@$2</a>')
         .replace(/(\s|^)#(\w+)/g, '$1<a class="hashTag" href="http://twitter.com/search?q=%23$2">#$2</a>')
 
-Array::push.apply Timeline.shorthands, [
+[].push.apply Timeline.shorthands, [
     {
         pattern: /^@([a-z-_]+)\/([a-z-_]+)/i,
         fun: (_, name, list_name) -> new TwitterListTimeline(name, list_name)

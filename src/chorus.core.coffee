@@ -326,7 +326,7 @@ class View extends PubSub
 
         @htmlCache[key]
 
-extend Chorus, {
+extend @Chorus, {
     OrderedSet,
     PubSub,
     Timeline,
