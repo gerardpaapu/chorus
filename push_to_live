@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cake compress
+rsync -r . node:/home/gerard/sites/gerardpaapu.com/www/qorus/

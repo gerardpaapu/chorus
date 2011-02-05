@@ -14,8 +14,8 @@ own server (and preferably concat them together and minify them yourself).
 To get started copy and paste these lines into the `<head>` of your document
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript" src="http://gerardpaapu.com/qorus/chorus.twitter.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="http://gerardpaapu.com/qorus/styles.css" />
+    <script type="text/javascript" src="http://gerardpaapu.com/qorus/dist/chorus.twitter.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="http://gerardpaapu.com/qorus/dist/styles.css" />
     <script>
         jQuery(function ($) {
             // replace 'sharkbrain' with your username
@@ -62,13 +62,13 @@ Chorus supports a bunch of sources other than twitter through modules.
 
 Each of them depends on the `core` module, which you can include with
     
-    <script src="http://gerardpaapu.com/qorus/chorus.core.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/dist/chorus.core.min.js" type="text/javascript"></script> 
 
 ### Facebook
 
 The facebook module supports user feeds via the shorthand "FB:{id}"
 
-    <script src="http://gerardpaapu.com/qorus/facebook.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/dist/facebook.min.js" type="text/javascript"></script> 
     <script>
         jQuery(function ($) {
             $("#MyFeed").chorus("FB:BarackObama");
@@ -80,7 +80,7 @@ The facebook module supports user feeds via the shorthand "FB:{id}"
 The Hacker News module follows a user's posts using the (dangerously violent) [ihackernews api](http://api.ihackernews.com/).
 It uses the shorthand "HN:{username}".
 
-    <script src="http://gerardpaapu.com/qorus/ihackernews.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/dist/ihackernews.min.js" type="text/javascript"></script> 
     <script>
         jQuery(function ($) {
             $("#MyFeed").chorus("HN:paul", "HN:pg");
@@ -91,7 +91,7 @@ It uses the shorthand "HN:{username}".
 
 The Github module follows commits on a project (and branch), it uses the shorthands "GH:{user}/{project}" and "GH:{user}/{project}/{branch}".
 
-    <script src="http://gerardpaapu.com/qorus/github.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/dist/github.min.js" type="text/javascript"></script> 
     <script>
         jQuery(function ($) {
             $("#Projects").chorus("GH:sharkbrainguy/qorus", "GH:mootools/mootools-core/2.0wip");
@@ -102,7 +102,7 @@ The Github module follows commits on a project (and branch), it uses the shortha
 
 The friendfeed module includes a users friendfeed, it uses the shorthands "FF:{user}"
 
-    <script src="http://gerardpaapu.com/qorus/friendfeed.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/dist/friendfeed.min.js" type="text/javascript"></script> 
     <script>
         jQuery(function ($) {
             $("#OMGPaul").chorus("FF:paul");
@@ -114,8 +114,8 @@ The friendfeed module includes a users friendfeed, it uses the shorthands "FF:{u
 Wordpress exposes a clone of the twitter api (which is super cool), so it requires the twitter module. It uses 
 the shorthand "WP:{username}.wordpress.com"
 
-    <script src="http://gerardpaapu.com/qorus/twitter.min.js" type="text/javascript"></script> 
-    <script src="http://gerardpaapu.com/qorus/wordpress.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/dist/twitter.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/dist/wordpress.min.js" type="text/javascript"></script> 
     <script>
         jQuery(function ($) {
             $("#MyDeadOldBlog").chorus("WP:sharkbrainguy.wordpress.com");
