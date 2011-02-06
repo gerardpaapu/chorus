@@ -262,17 +262,20 @@ class Timeline extends PubSub
 
     @from: (t) ->
         return t if t instanceof Timeline
-
+        t = trim t
         for short in Timeline.shorthands
             match = short.pattern.exec t
             return short.fun match... if match
 
         null
 
+trim = (str) ->
+    str.replace(/^\s*/, '').replace(/\s*$/, '')
+
 class View extends PubSub
     constructor: (options) ->
         @options = extend {}, @options, options
-        @subscribe feed for feed in @options.feeds
+        @subscribe feed for feed in @options.feeds when feed?
 
         if @options.container?
             @toElement().appendTo @options.container
