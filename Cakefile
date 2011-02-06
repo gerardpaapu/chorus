@@ -22,6 +22,7 @@ task "compile", "compile all the coffee files to js", ->
         concat "chorus.core", "friendfeed", "chorus.friendfeed"
         concat "chorus.core", "github", "chorus.github"
         concat "chorus.core", "facebook", "chorus.facebook"
+        concat "chorus.core", "buzz", "chorus.buzz"
         console.log "compilation succeeded"
 
     catch err

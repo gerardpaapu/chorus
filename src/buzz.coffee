@@ -24,7 +24,7 @@ class BuzzTimeline extends Timeline
             BuzzStatus.from entry, @userid
 
 class BuzzStatus extends Status
-    renderAvatar: -> 
+    renderAvatar: ->
         link = $ """<a href="#{ @getStreamUrl() }" class="avatar" />"""
         link.append buzzAvatar @username
         return link
@@ -77,10 +77,8 @@ getGoogleAvatar = (name, callback) ->
         data: { q: "#{name}@gmail.com" }
         dataType: "jsonp"
         jsonp: "jscb"
-        success: (json) -> 
+        success: (json) ->
             user = json["http://www.google.com/profiles/#{name}"]
             src  = user and user.attributes.photo
 
             callback name, src if src
-
-Chorus.buzzAvatar = buzzAvatar
