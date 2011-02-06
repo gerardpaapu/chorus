@@ -68,7 +68,7 @@ class TwitterTimeline extends Timeline
         jQuery.ajax
             url: @queryUrl
             data: data
-            dataType: 'jsonp'
+            dataType: "jsonp"
             success: (data) => @update data
 
     queryUrl: "http://api.twitter.com/1/statuses/public_timeline.json"

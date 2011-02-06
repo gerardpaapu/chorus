@@ -7,7 +7,8 @@ coffee_files = [
     "friendfeed",
     "wordpress",
     "ihackernews",
-    "github"
+    "github",
+    "buzz"
 ]
 
 task "compile", "compile all the coffee files to js", ->
