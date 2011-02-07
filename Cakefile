@@ -64,7 +64,7 @@ compile = (name) ->
         throw err
 
 compress = (name) ->
-    {parser, uglify} = require "uglify"
+    {parser, uglify} = require "uglify-js"
 
     try
         src = fs.readFileSync "dist/#{name}.js", "utf-8"
