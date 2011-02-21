@@ -3,6 +3,7 @@
 coffee_files = [
     "chorus.core",
     "twitter",
+    "replies",
     "facebook",
     "friendfeed",
     "wordpress",
