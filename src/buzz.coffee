@@ -52,8 +52,10 @@ buzzAvatar = (name) ->
 
     unless cached?
         init name
+    else if cached.image?
+        cached.image.clone()
     else
-        cached.image.clone() or placeholder name
+        placeholder name
 
 init = (name) ->
     getGoogleAvatar name, removePlaceholders
