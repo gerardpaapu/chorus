@@ -244,7 +244,6 @@ class Timeline extends PubSub
 
     statuses: new OrderedSet()
     subscribers: []
-    latest: null
     timer: null
 
     fetch: -> throw Error "Not Implemented"
@@ -258,15 +257,11 @@ class Timeline extends PubSub
         @timer = null
 
     update: (data, source) ->
-        statuses = ( s for s in this.statusesFromData(data) when @isNew s )
+        statuses = (s for s in @statusesFromData data when !@statuses.contains(s))
 
         if statuses.length > 0
             @statuses = @statuses.concat statuses
-            @latest = @statuses.item 0
-            @publish @statuses.toArray()
-
-    isNew: (status) ->
-        !@latest or status.date.getTime() > @latest.date.getTime()
+            @publish statuses
 
     @shorthands: []
 

@@ -63,7 +63,8 @@ class TwitterTimeline extends Timeline
     fetch: (n) ->
         data = extend {}, @sendData
 
-        if @latest then data.since_id = @latest.id
+        if @statuses.length > 0
+            data.since_id = @statuses.item(0).id
 
         jQuery.ajax
             url: @queryUrl
