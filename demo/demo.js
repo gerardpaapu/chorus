@@ -1,7 +1,5 @@
 $(function () {	
-    $("#Twitter").chorus({
-        feeds: [ new Chorus.ConversationTimeline("boxerhockey")]
-    });
+    $("#Twitter").chorus("@@sharkbrain");
 //    $("#Github").chorus("GH:sharkbrainguy/qorus");
 //    $("#HackerNews").chorus("HN:pg", "FF:paul");
 //    $("#Facebook").chorus("FB:BarackObama");

@@ -21,5 +21,9 @@ class ReplyTimeline extends Timeline
 
         this
 
+Timeline.shorthands.unshift
+    pattern: /^@@([a-z0-9-_]+)$/i
+    fun: (_, name) -> new ConversationTimeline name
+
 @Chorus.ReplyTimeline = ReplyTimeline
 @Chorus.ConversationTimeline = ConversationTimeline
