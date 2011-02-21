@@ -49,16 +49,29 @@ test("Initialized with and Array, and called OrderedSet::concat", function () {
     ok( set.concat([11]) !== set, "OrderedSet::concat() will return identity");
 });
 
-test("ordering statuses", function () {
+test("Ordering statuses", function () {
     var ls = new OrderedSet(test_tweets),
-        i, j, l = ls.length;
+        i, j, k, l = ls.length,
+
+        correct_order = true,
+        no_dupes = true;
 
     for (i = 0; i + 1 < l; i++) {
         for (j = 1; i + j < l; j++) {
-            ok(ls.items[i + j].__gt__(ls.items[i]), ("item[" + (i + j) + "] > item[" + i + "]"));
-            ok(!ls.items[i].__gt__(ls.items[i + j]), ("!item[" + i + "] > item[" + (i + j) + "]"));
-            ok(!ls.items[i].__eq__(ls.items[i + j]) && !ls.items[i + j].__eq__(ls.items[i]),
-               ("item[" + i + "] !== item[" + (i + j) + "]"));
+            k = i + j; // k and i are valid indexes, and k > i
+            if (// test that item[k] > item[i] 
+                !ls.items[k].__gt__(ls.items[i]) ||
+                // test that !(item[i] > item[k])
+                ls.items[i].__gt__(ls.items[k])) {
+                correct_order = false;
+            }
+
+            if (ls.items[i].__eq__(ls.items[k]) || ls.items[k].__eq__(ls.items[i])){
+                no_dupes = false;
+            }
         }
     }
+
+    ok(correct_order, "Correct order");
+    ok(no_dupes, "No duplicates");
 });
