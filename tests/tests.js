@@ -48,3 +48,27 @@ test("Initialized with and Array, and called OrderedSet::concat", function () {
     ok( set.concat([5])  === set,  "OrderedSet::concat() will return identity");
     ok( set.concat([11]) !== set, "OrderedSet::concat() will return identity");
 });
+
+test("ordering statuses", function () {
+    var ls = new OrderedSet();
+    ls = ls.concat([ test_tweets[2] ]);
+    ls = ls.concat([ test_tweets[3] ]);
+    ls = ls.concat([ test_tweets[1] ]);
+
+    ok(ls.items[2] === test_tweets[0], "checking the order (0)");
+    ok(ls.items[1] === test_tweets[1], "checking the order (1)");
+    ok(ls.items[0] === test_tweets[2], "checking the order (2)");
+
+    ok(ls.items[2].__gt__(ls.items[1]));
+    ok(ls.items[2].__gt__(ls.items[0]));
+    ok(ls.items[1].__gt__(ls.items[0]));
+
+    ok(!ls.items[0].__gt__(ls.items[0]));
+    ok(!ls.items[0].__gt__(ls.items[1]));
+    ok(!ls.items[0].__gt__(ls.items[2]));
+    
+    ok(!ls.items[1].__gt__(ls.items[1]));
+    ok(!ls.items[1].__gt__(ls.items[2]));
+
+    ok(!ls.items[2].__gt__(ls.items[2]));
+});
