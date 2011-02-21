@@ -27,7 +27,7 @@ class Tweet extends Status
         element
 
     @from: (data) ->
-        return data if data instanceof Tweet
+        return data if data instanceof Status
 
         data = data.retweeted_status ? data
 
@@ -53,11 +53,22 @@ class Tweet extends Status
             callback = (status) ->
                 status.toElement().replaceAll(placeholder)
 
-        $.ajax
-            url: "http://api.twitter.com/1/statuses/show/#{id}.json"
-            success: (json) -> callback Tweet.from(json)
+        cached = Tweet.cache["Tweet:#{id}"]
+
+        if cached?
+            cached
+        else
+            $.ajax
+                url: "http://api.twitter.com/1/statuses/show/#{id}.json"
+                dataType: "jsonp"
+                success: (json) ->
+                    status = Tweet.from(json)
+                    Tweet.cache["Tweet:#{id}"] = status
+                    callback status
 
         return placeholder || null
+
+    @cache: {}
 
 class TwitterTimeline extends Timeline
     fetch: (n) ->
