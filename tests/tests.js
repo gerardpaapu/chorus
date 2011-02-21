@@ -50,25 +50,15 @@ test("Initialized with and Array, and called OrderedSet::concat", function () {
 });
 
 test("ordering statuses", function () {
-    var ls = new OrderedSet();
-    ls = ls.concat([ test_tweets[2] ]);
-    ls = ls.concat([ test_tweets[3] ]);
-    ls = ls.concat([ test_tweets[1] ]);
+    var ls = new OrderedSet(test_tweets),
+        i, j, l = ls.length;
 
-    ok(ls.items[2] === test_tweets[0], "checking the order (0)");
-    ok(ls.items[1] === test_tweets[1], "checking the order (1)");
-    ok(ls.items[0] === test_tweets[2], "checking the order (2)");
-
-    ok(ls.items[2].__gt__(ls.items[1]));
-    ok(ls.items[2].__gt__(ls.items[0]));
-    ok(ls.items[1].__gt__(ls.items[0]));
-
-    ok(!ls.items[0].__gt__(ls.items[0]));
-    ok(!ls.items[0].__gt__(ls.items[1]));
-    ok(!ls.items[0].__gt__(ls.items[2]));
-    
-    ok(!ls.items[1].__gt__(ls.items[1]));
-    ok(!ls.items[1].__gt__(ls.items[2]));
-
-    ok(!ls.items[2].__gt__(ls.items[2]));
+    for (i = 0; i + 1 < l; i++) {
+        for (j = 1; i + j < l; j++) {
+            ok(ls.items[i + j].__gt__(ls.items[i]), ("item[" + (i + j) + "] > item[" + i + "]"));
+            ok(!ls.items[i].__gt__(ls.items[i + j]), ("!item[" + i + "] > item[" + (i + j) + "]"));
+            ok(!ls.items[i].__eq__(ls.items[i + j]) && !ls.items[i + j].__eq__(ls.items[i]),
+               ("item[" + i + "] !== item[" + (i + j) + "]"));
+        }
+    }
 });

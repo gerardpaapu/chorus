@@ -81,8 +81,18 @@ class OrderedSet
 #
 # Maintain the order of elements such that
 # for [a, ... b], gt(b, a) is true
+LESS = -1
+MORE = 1
+EQUAL = 0
+
 sort = (set) ->
-    set.items.sort (a, b) -> if gt b, a then 0 else 1
+    set.items.sort (a, b) ->
+        if gt a, b
+            MORE
+        else if gt b, a
+            LESS
+        else
+            EQUAL
 
 # Remove duplicates so that for no 
 # two elements (a, b) eq(a, b)
