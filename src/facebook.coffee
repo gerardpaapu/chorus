@@ -59,7 +59,11 @@ class FacebookTimeline extends Timeline
             dataType: 'jsonp'
             success: (data) => @update data
 
-    statusesFromData: (json) -> FacebookStatus.from item for item in json.data
+    statusesFromData: (json) ->
+        if json.data?
+            FacebookStatus.from item for item in json.data
+        else
+            []
 
 Timeline.shorthands.unshift
     pattern: /^FB:(.*)$/
