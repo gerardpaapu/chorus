@@ -3,7 +3,7 @@
 
 class FacebookStatus extends Status
     constructor: (id, username, avatar, date, text, raw, @userid) ->
-        date = new Date().setISO8601(date)
+        date = setISO8601.call new Date(), date
 
         super id, username, avatar, date, text, raw
 
@@ -65,7 +65,7 @@ Timeline.shorthands.unshift
     pattern: /^FB:(.*)$/
     fun: (_, name) -> new FacebookTimeline name
 
-`Date.prototype.setISO8601 = function(dString){
+setISO8601 = `function (dString){
     var regexp = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/,
         d = dString.match(regexp);
 
@@ -95,6 +95,6 @@ Timeline.shorthands.unshift
     }
 
     return this;
-};`
+}`
 
 extend Chorus, {FacebookStatus, FacebookTimeline}
