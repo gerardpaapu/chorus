@@ -3,7 +3,6 @@
 coffee_files = [
     "chorus.core",
     "twitter",
-    "replies",
     "facebook",
     "friendfeed",
     "wordpress",
@@ -45,7 +44,6 @@ task "compress", "compress the javascript files", ->
         compress "chorus.core"
         compress "chorus.github"
         compress "chorus.twitter"
-        compress "replies"
         compress "chorus.facebook"
         compress "chorus.friendfeed"
         console.log "compression succeeded"

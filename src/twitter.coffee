@@ -129,6 +129,30 @@ class TwitterAboutTimeline extends TwitterTimeline
         @subscribe @user
         @subscribe @search
 
+class TwitterConversationTimeline extends TwitterTimeline
+    # Subscribes to a User timeline and a Reply timeline
+    # for that user
+    constructor: (username, options) ->
+        @user = new TwitterUserTimeline username, options
+        @replies = new ReplyTimeline @user
+
+        @subscribe @replies
+        @subscribe @user
+
+class ReplyTimeline extends Timeline
+    # This subscribes to another timeline and publishes
+    # all the tweets that it is replying to
+    constructor: (@timeline) -> @subscribe @timeline
+
+    update: (statuses) ->
+        for status in statuses when status.reply?
+            Tweet.fromID status.reply.statusID, (tweet) =>
+                @statuses = @statuses.concat([ tweet ])
+                @latest = @statuses.item 0
+                @publish @statuses.toArray()
+
+        null
+
 datefix = (str) ->
     # Twitter seems to give some wacky date format
     # that IE can't handle, so I convert it to something more normal.
@@ -146,6 +170,10 @@ linkify = (str) ->
     {
         pattern: /^@([a-z-_]+)\/([a-z-_]+)/i,
         fun: (_, name, list_name) -> new TwitterListTimeline(name, list_name)
+    },
+    {
+        pattern: /^@@([a-z0-9-_]+)$/i
+        fun: (_, name) -> new TwitterConversationTimeline name
     },
     {
         pattern: /^@\+([a-z-_]+)/i,
@@ -167,5 +195,6 @@ extend @Chorus, {
     TwitterUserTimeline,
     TwitterListTimeline,
     TwitterSearchTimeline,
-    TwitterAboutTimeline
+    TwitterAboutTimeline,
+    TwitterConversationTimeline
 }
