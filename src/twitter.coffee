@@ -125,7 +125,6 @@ class TwitterAboutTimeline extends TwitterTimeline
     constructor: (screenname, options) ->
         @user = new TwitterUserTimeline screenname, options
         @search = new TwitterSearchTimeline "to:" + screenname
-        @subscriber = new Chorus.PubSub()
         @subscribe @user
         @subscribe @search
 
