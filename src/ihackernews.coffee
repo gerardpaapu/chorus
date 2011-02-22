@@ -15,17 +15,14 @@ class HNComment extends Status
             #{ @avatar } 
         </a>"""
 
-    renderParent: -> """
+    renderContext: ->
+        return false unless @parentID?
+
+        """
         <a class="reply"
            href="http://news.ycombinator.com/item?id=#{ @parentID }">
             in reply to &hellip;
         </a>"""
-
-    toElement: (options) ->
-        element = super options
-        if @parentID? then element.append @renderParent()
-
-        element
 
     @from: (json) ->
         {comment, id, parentId, postedAgo, postedBy, postId} = json

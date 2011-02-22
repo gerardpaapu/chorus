@@ -166,12 +166,16 @@ class Status
         options ?= {}
         body     = @renderBody()
         element  = $ '<div class="status" />'
+        context_link = @renderContext()
 
         element.append(
             @renderAvatar(),
             @renderScreenName(),
             body,
             @renderTimestamp())
+
+        if context_link
+            element.append context_link
 
         if options.extras?
             extras = fn(element, body, this) for fn in options.extras
@@ -211,6 +215,8 @@ class Status
         </a>"""
 
     renderBody: -> """<p class="statusBody">#{@text.replace '\n', '<br />'}</p>"""
+
+    renderContext: -> false
 
     raw: null
 

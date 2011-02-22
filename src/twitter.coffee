@@ -14,17 +14,14 @@ class Tweet extends Status
             #{ linkify(@text).replace '\n', '<br />' }
         </p>"""
 
-    renderReply: -> """
+    renderContext: ->
+        return false unless @reply?
+
+        """
         <a class="reply"
            href="http://twitter.com/#{@reply.username}/statuses/#{@reply.statusID}">
            in reply to @#{@reply.username}
         </a>"""
-
-    toElement: (options) ->
-        element = super options
-        if @reply? then element.append @renderReply()
-
-        element
 
     @from: (data) ->
         return data if data instanceof Status
@@ -53,22 +50,34 @@ class Tweet extends Status
             callback = (status) ->
                 status.toElement().replaceAll(placeholder)
 
-        cached = Tweet.cache["Tweet:#{id}"]
+        key       = "" + id
+        cached    = __tweet_cache__[ key ] ? null
+        callbacks = (__callbacks__[ key ] ?= [])
+        fresh     = cached is null and callbacks.length is 0
 
         if cached?
-            cached
+            callback cached
         else
+            callbacks.push callback
+
+        if fresh
             $.ajax
                 url: "http://api.twitter.com/1/statuses/show/#{id}.json"
                 dataType: "jsonp"
                 success: (json) ->
                     status = Tweet.from(json)
-                    Tweet.cache["Tweet:#{id}"] = status
-                    callback status
+
+                    __tweet_cache__[ key ] = status
+
+                    for callback in __callbacks__[ key ]
+                        try callback status
+
+                    null
 
         return placeholder || null
 
-    @cache: {}
+__tweet_cache__ = {}
+__callbacks__ = {}
 
 class TwitterTimeline extends Timeline
     fetch: (n) ->
