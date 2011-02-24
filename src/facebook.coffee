@@ -1,5 +1,4 @@
-{Status, Timeline} = Chorus = @Chorus
-{extend} = $ = jQuery
+{Status, Timeline, extend, jsonp} = Chorus = @Chorus
 
 class FacebookStatus extends Status
     constructor: (id, username, avatar, date, text, raw, @userid) ->
@@ -16,10 +15,9 @@ class FacebookStatus extends Status
     toElement: (options) ->
         element = super options
 
-        if options.comment then $.ajax
+        if options.comment then jsonp 
             url: "https://graph.facebook.com/#{@userid}_#{@id}/comments"
-            dataType: "jsonp"
-            success: (json) =>
+            callback: (json) =>
                 if json.data.length > 0
                     container = $ '<div class="comments" />'
                     comments = (renderComment item for item in json.data)
@@ -54,10 +52,9 @@ class FacebookTimeline extends Timeline
         super options
 
     fetch: (n) ->
-        jQuery.ajax
+        jsonp
             url: @queryUrl
-            dataType: 'jsonp'
-            success: (data) => @update data
+            callback: (data) => @update data
 
     statusesFromData: (json) ->
         if json.data?

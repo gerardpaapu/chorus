@@ -1,5 +1,4 @@
-{Status, Timeline} = Chorus = @Chorus
-{extend} = $ = jQuery
+{Status, Timeline, extend, jsonp} = Chorus = @Chorus
 
 class FriendfeedStatus extends Status
     constructor: (id, username, avatar, date, text, raw, @url) ->
@@ -32,11 +31,10 @@ class FriendFeedTimeline extends Timeline
         super options
 
     fetch: ->
-        $.ajax
+        jsonp
             url: @queryUrl
             data: @sendData
-            dataType: 'jsonp'
-            success: (json) => @update json
+            callback: (json) => @update json
 
     statusesFromData: (json) ->
         FriendfeedStatus.from entry for entry in json.entries

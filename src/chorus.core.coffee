@@ -33,17 +33,20 @@ $fromHTML = (html) ->
     parent = $element "div", innerHTML: html
     parent.childNodes[0]
 
-jsonp = (url, data, callback) ->
+jsonp = (obj) ->
+    {url, data, callback, padding} = obj
+    data ?= {}
+    padding ?= "callback"
     head = document.getElementsByTagName("HEAD")[0]
-    query = ("#{key}=#{value}&" for key, value of data)
+    query = ("#{key}=#{value}&" for key, value of data).join('')
 
     script = $element "script", {
         type: "text/javascript",
-        src: "#{url}?#{query}callback=Chorus.jsonp.callbacks[#{jsonp.uid}]"
+        src: "#{url}?#{query}#{padding}=Chorus.jsonp.callback_#{jsonp.uid}"
     }
 
-    jsonp.callbacks[jsonp.uid] = (data) ->
-        delete jsonp.callbacks[jsonp.uid]
+    jsonp["callback_#{jsonp.uid}"] = (data) ->
+        delete jsonp["callback_#{jsonp.uid}"]
         head.removeChild script
         callback data
 
@@ -275,7 +278,7 @@ class Status
             #{@username}
         </a>"""
 
-    renderBody: -> """<p class="statusBody">#{@text.replace '\n', '<br />'}</p>"""
+    renderBody: -> """<div class="statusBody">#{@text.replace '\n', '<br />'}</div>"""
 
     renderContext: -> false
 
@@ -389,8 +392,9 @@ class View extends PubSub
     updateElement: (element) ->
         statuses = @statuses.slice 0, @options.count
         children = (@renderStatus status for status in statuses)
-        element.removeChild child for child in element.childNodes
+        element.removeChild element.firstChild while element.firstChild
         $append element, children...
+        return element
 
     renderStatus: (status) ->
         options = @options.renderOptions

@@ -1,5 +1,4 @@
-{Timeline, Status} = Chorus = @Chorus
-{extend} = $ = jQuery
+{Timeline, Status, extend, jsonp} = Chorus = @Chorus
 
 class BuzzTimeline extends Timeline
     constructor: (userid, options) ->
@@ -10,11 +9,15 @@ class BuzzTimeline extends Timeline
 
     fetch: ->
         feed_url = escape "http://buzz.googleapis.com/feeds/#{ @userid }/public/posted"
-        data = "q=#{ feed_url }&num=#{ @options.count }&output=json&v=1.0"
-        $.ajax
-            url: "#{ @queryUrl }?#{ data }",
-            dataType: 'jsonp',
-            success: (json) => @update json
+
+        jsonp
+            data:
+                q: feed_url
+                num: @options.count
+                output: "json"
+                v: "1.0"
+            url: @queryUrl
+            callback: (json) => @update json
 
     statusesFromData: (data) ->
         unless data.responseStatus is 200 and data.responseData
@@ -25,8 +28,8 @@ class BuzzTimeline extends Timeline
 
 class BuzzStatus extends Status
     renderAvatar: ->
-        link = $ """<a href="#{ @getStreamUrl() }" class="avatar" />"""
-        link.append buzzAvatar @username
+        link = Chorus.$fromHTML """<a href="#{ @getStreamUrl() }" class="avatar" />"""
+        Chorus.$append link, buzzAvatar @username
         return link
 
     getStreamUrl: -> "http://www.google.com/profiles/#{@username}#buzz"
@@ -64,22 +67,22 @@ init = (name) ->
     placeholder name
 
 placeholder = (name) ->
-    el = $ '<div class="placeholder" />'
+    el = Chorus.$fromHTML '<div class="placeholder" />'
     cache[name].placeholders.push el
     return el
 
 removePlaceholders = (name, src) ->
     item = cache[name]
-    item.image = $ """<img src="#{ src }" class="avatar" />"""
-    item.image.clone().replaceAll(item.placeholders)
+    item.image = Chorus.$fromHTML """<img src="#{ src }" class="avatar" />"""
+    for p in item.placeholders
+        p.parentNode.replaceChild item.image.cloneNode(true), p
 
 getGoogleAvatar = (name, callback) ->
-    $.ajax
+    jsonp
         url: "http://socialgraph.apis.google.com/otherme"
         data: { q: "#{name}@gmail.com" }
-        dataType: "jsonp"
-        jsonp: "jscb"
-        success: (json) ->
+        padding: "jscb"
+        callback: (json) ->
             user = json["http://www.google.com/profiles/#{name}"]
             src  = user and user.attributes.photo
 
