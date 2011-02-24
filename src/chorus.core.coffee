@@ -212,20 +212,10 @@ class PubSub
     @bind: (object, fn) ->
         listener = new PubSub()
         listener.update = (data, src) ->
-            fn data
+            fn.call this, data, src
             @publish data
 
         listener.subscribe object
-        listener
-
-    @bindOnce: (pub, fn) ->
-        listener = new PubSub()
-        listener.update = (data, src) ->
-            fn data
-            src.removeSubscriber this
-            @publish data
-
-        listener.subscribe pub
         listener
 
 class Status
