@@ -1,0 +1,6 @@
+[submodule "lib/jquery"]
+	path = lib/jquery
+	url = https://github.com/jquery/jquery.git
+[submodule "lib/timeago"]
+	path = lib/timeago
+	url = https://github.com/rmm5t/jquery-timeago.git
