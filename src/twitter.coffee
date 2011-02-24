@@ -1,5 +1,4 @@
-{Timeline, Status, Subscriber} = Chorus = @Chorus
-{extend} = $ = jQuery
+{Timeline, Status, Subscriber, extend, jsonp} = Chorus = @Chorus
 
 class Tweet extends Status
     constructor: (id, username, avatar, date, text, raw, @reply) ->
@@ -61,18 +60,19 @@ class Tweet extends Status
             callbacks.push callback
 
         if fresh
-            $.ajax
-                url: "http://api.twitter.com/1/statuses/show/#{id}.json"
-                dataType: "jsonp"
-                success: (json) ->
-                    status = Tweet.from(json)
+            url = "http://api.twitter.com/1/statuses/show/#{id}.json"
 
-                    __tweet_cache__[ key ] = status
+            callback = (json) ->
+                status = Tweet.from(json)
 
-                    for callback in __callbacks__[ key ]
-                        try callback status
+                __tweet_cache__[ key ] = status
 
-                    null
+                for callback in __callbacks__[ key ]
+                    try callback status
+
+                null
+
+            jsonp url, {}, callback
 
         return placeholder || null
 
@@ -86,11 +86,7 @@ class TwitterTimeline extends Timeline
         if @statuses.length > 0
             data.since_id = @statuses.item(0).id
 
-        jQuery.ajax
-            url: @queryUrl
-            data: data
-            dataType: "jsonp"
-            success: (data) => @update data
+        jsonp @queryUrl, data, (data) => @update data
 
     queryUrl: "http://api.twitter.com/1/statuses/public_timeline.json"
 

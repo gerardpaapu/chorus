@@ -1,5 +1,68 @@
 Chorus = @Chorus ?= {}
-{inArray, makeArray, extend} = $ = jQuery
+
+extend = (destination, sources...) ->
+    for source in sources
+        destination[key] = value for key, value of source
+
+    destination
+
+$element = (name, props) ->
+    el = document.createElement name
+    for key, value of props
+        switch typeof value
+            when 'string', 'number'
+                switch key
+                    when 'class'
+                        el.setAttribute('class', '' + value)
+
+                    else el[key] = value
+
+            when 'object' then extend el[key], value
+
+    return el
+
+$append = (el, children...) ->
+    for child in children
+        switch typeof child
+            when 'string' then el.appendChild $fromHTML child
+            else el.appendChild child
+
+    el
+
+$fromHTML = (html) ->
+    parent = $element "div", innerHTML: html
+    parent.childNodes[0]
+
+jsonp = (url, data, callback) ->
+    head = document.getElementsByTagName("HEAD")[0]
+    query = ("#{key}=#{value}&" for key, value of data)
+
+    script = $element "script", {
+        type: "text/javascript",
+        src: "#{url}?#{query}callback=Chorus.jsonp.callbacks[#{jsonp.uid}]"
+    }
+
+    jsonp.callbacks[jsonp.uid] = (data) ->
+        delete jsonp.callbacks[jsonp.uid]
+        head.removeChild script
+        callback data
+
+    jsonp.uid++
+    head.appendChild script
+
+jsonp.uid = 0
+jsonp.callbacks = []
+
+indexOf = Array::indexOf ? (needle) ->
+    i = 0; len = @length
+
+    while i < len
+        return i if @[i] is needle
+        i++
+
+    return -1
+
+extend Chorus, {extend, jsonp, $element, $append, $fromHTML}
 
 # OrderedSet
 # ----------
@@ -137,13 +200,13 @@ class PubSub
     update: -> this
 
     addSubscriber: (subscriber) ->
-        if inArray(@__subscribers__, subscriber) is -1
+        unless subscriber in @__subscribers__
             @__subscribers__ = @__subscribers__.concat [ subscriber ]
 
         this
 
     removeSubscriber: (subscriber) ->
-        index = inArray(@__subscribers__, subscriber)
+        index = indexOf.call @__subscribers__, subscriber
         @__subscribers__.splice(index, 1) unless index is -1
 
     @bind: (object, fn) ->
@@ -155,6 +218,15 @@ class PubSub
         listener.subscribe object
         listener
 
+    @bindOnce: (pub, fn) ->
+        listener = new PubSub()
+        listener.update = (data, src) ->
+            fn data
+            src.removeSubscriber this
+            @publish data
+
+        listener.subscribe pub
+        listener
 
 class Status
     constructor: (@id, @username, @avatar, date, @text, @raw) ->
@@ -165,26 +237,27 @@ class Status
     toElement: (option) ->
         options ?= {}
         body     = @renderBody()
-        element  = $ '<div class="status" />'
+        element  = $element 'div', class: "status"
         context_link = @renderContext()
 
-        element.append(
+        $append(
+            element,
             @renderAvatar(),
             @renderScreenName(),
             body,
             @renderTimestamp())
 
         if context_link
-            element.append context_link
+            $append element, context_link
 
         if options.extras?
             extras = fn(element, body, this) for fn in options.extras
             elements = extra for extra in extras when extra
 
             if elements.length > 0
-                el = $ '<div class="extras" />'
-                el.append elements...
-                element.append(el)
+                el = $element 'div', class: "extras"
+                $append el, elements...
+                $append element, el
 
         element
 
@@ -199,14 +272,12 @@ class Status
         </a>"""
 
     renderTimestamp: ->
-        el = $ """
+        """
         <a class="date"
            href="#{ @getUrl() }"
            title="#{ iso_datestring @date }">
             #{ @date.toLocaleTimeString() } #{ @date.toLocaleDateString() }
         </a>"""
-
-        if $.fn.timeago? then el.timeago() else el
 
     renderScreenName: -> """
         <a class="username"
@@ -288,8 +359,10 @@ class View extends PubSub
         @options = extend {}, @options, options
         @subscribe feed for feed in @options.feeds when feed?
 
-        if @options.container?
-            @toElement().appendTo @options.container
+        if @options.container
+            container = @options.container
+            container = if typeof container is 'string' then document.getElementById container else container
+            $append container, @toElement()
 
     options:
         count: 10
@@ -319,23 +392,22 @@ class View extends PubSub
             @publish statuses
 
     toElement: ->
-        element = $ '<div class="view chorus_view" />'
-
+        element = $element "div", class: "view chorus_view"
         PubSub.bind this, => @updateElement element
         @updateElement element
-        element.data 'View', this
 
     updateElement: (element) ->
         statuses = @statuses.slice 0, @options.count
         children = (@renderStatus status for status in statuses)
-        element.empty().append children...
+        element.removeChild child for child in element.childNodes
+        $append element, children...
 
     renderStatus: (status) ->
         options = @options.renderOptions
         key = status.toKey()
         @htmlCache ?= {}
 
-        unless key in @htmlCache
+        unless key of @htmlCache
             @htmlCache[key] = status.toElement(@options.renderOptions)
 
         @htmlCache[key]
@@ -347,17 +419,3 @@ extend @Chorus, {
     View,
     Status
 }
-
-$.fn.chorus = (arg) ->
-    view = switch Object::toString.call arg
-        when "[object String]"
-            new View feeds: makeArray(arguments)
-
-        when "[object Object]"
-            new View arg
-
-        else null
-
-    $(this)
-        .append(view.toElement())
-        .data('View', view)
