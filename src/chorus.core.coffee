@@ -6,21 +6,6 @@ extend = (destination, sources...) ->
 
     destination
 
-$element = (name, props) ->
-    el = document.createElement name
-    for key, value of props
-        switch typeof value
-            when 'string', 'number'
-                switch key
-                    when 'class'
-                        el.setAttribute('class', '' + value)
-
-                    else el[key] = value
-
-            when 'object' then extend el[key], value
-
-    return el
-
 $append = (el, children...) ->
     for child in children
         switch typeof child
@@ -30,7 +15,8 @@ $append = (el, children...) ->
     el
 
 $fromHTML = (html) ->
-    parent = $element "div", innerHTML: html
+    parent = document.createElement "div"
+    parent.innerHTML = html
     parent.childNodes[0]
 
 jsonp = (obj) ->
@@ -39,14 +25,13 @@ jsonp = (obj) ->
     padding ?= "callback"
     head = document.getElementsByTagName("HEAD")[0]
     query = ("#{key}=#{value}&" for key, value of data).join('')
+    key = "jsonp_callback_#{jsonp.uid}"
+    script = document.createElement "script"
+    script.type = "text/javascript"
+    script.src = "#{url}?#{query}#{padding}=#{key}"
 
-    script = $element "script", {
-        type: "text/javascript",
-        src: "#{url}?#{query}#{padding}=Chorus.jsonp.callback_#{jsonp.uid}"
-    }
-
-    jsonp["callback_#{jsonp.uid}"] = (data) ->
-        delete jsonp["callback_#{jsonp.uid}"]
+    window[key] = (data) ->
+        delete window[key]
         head.removeChild script
         callback data
 
@@ -54,7 +39,6 @@ jsonp = (obj) ->
     head.appendChild script
 
 jsonp.uid = 0
-jsonp.callbacks = []
 
 indexOf = Array::indexOf ? (needle) ->
     i = 0; len = @length
@@ -65,7 +49,7 @@ indexOf = Array::indexOf ? (needle) ->
 
     return -1
 
-extend Chorus, {extend, jsonp, $element, $append, $fromHTML}
+extend Chorus, {extend, jsonp, $append, $fromHTML}
 
 # OrderedSet
 # ----------
@@ -230,7 +214,7 @@ class Status
     toElement: (option) ->
         options ?= {}
         body     = @renderBody()
-        element  = $element 'div', class: "status"
+        element  = $fromHTML '<div class="status"/>'
         context_link = @renderContext()
 
         $append(
@@ -248,7 +232,7 @@ class Status
             elements = extra for extra in extras when extra
 
             if elements.length > 0
-                el = $element 'div', class: "extras"
+                el = $fromHTML '<div class="extras" />'
                 $append el, elements...
                 $append element, el
 
@@ -385,7 +369,7 @@ class View extends PubSub
             @publish statuses
 
     toElement: ->
-        element = $element "div", class: "view chorus_view"
+        element = $fromHTML '<div class="view chorus_view" />'
         PubSub.bind this, => @updateElement element
         @updateElement element
 
