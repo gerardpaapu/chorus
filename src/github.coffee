@@ -1,5 +1,4 @@
-{Status, Timeline} = Chorus = @Chorus
-{extend} = $ = jQuery
+{Status, Timeline, extend, jsonp} = Chorus = @Chorus
 
 class GithubCommit extends Status
     constructor: (id, username, avatar, date, text, raw, @url) ->
@@ -21,10 +20,9 @@ class GithubCommits extends Timeline
         @queryUrl += "/#{@username}/#{@repo}/#{options?.branch ? 'master'}"
         super options
 
-    fetch: -> jQuery.ajax
+    fetch: -> jsonp 
         url: @queryUrl
-        dataType: "jsonp"
-        success: (data) => @update data
+        callback: (data) => @update data
 
     statusesFromData: (data) -> GithubCommit.from item for item in data.commits
 

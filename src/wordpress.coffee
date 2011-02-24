@@ -1,5 +1,4 @@
-{Timeline, Status, Tweet, TwitterUserTimeline} = Chorus = @Chorus
-{extend} = $ = jQuery
+{Timeline, Status, Tweet, TwitterUserTimeline, extend} = Chorus = @Chorus
 
 class WordpressTimeline extends TwitterUserTimeline
     queryUrl: "http://twitter-api.wordpress.com/statuses/user_timeline.json"

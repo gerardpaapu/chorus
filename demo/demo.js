@@ -2,22 +2,23 @@ new Chorus.View({
     feeds: ["@@boxerhockey"],
     container: "Twitter"
 });
-/*
-$(function () {	
-    // Uses the @@username shortcut for ConversationTimeline
-    $("#Twitter").append(view.toElement());
 
-    // Follows commits to the master branch of *this* project
-//    $("#Github").chorus("GH:sharkbrainguy/qorus");
-
-    // Paul Graham on HackerNews
-    // Paul Bucheit on FriendFeed
-//    $("#HackerNews").chorus("HN:pg", "FF:paul");
-
-    // Barack Obama on Facebook
-//    $("#Facebook").chorus("FB:BarackObama");
-
-    // Follows me on Buzz... does anyone use buzz?
-//    $("#Buzz").chorus("BZ:sharkbrainguy");
+new Chorus.View({
+    feeds: ["GH:sharkbrainguy/qorus"],
+    container: "Github"
 });
-*/
+
+new Chorus.View({
+    feeds: ["HN:pg", "FF:paul"],
+    container: "HackerNews"
+});
+
+new Chorus.View({
+    feeds: ["FB:BarackObama"],
+    container: "Facebook"
+});
+
+new Chorus.View({
+    feeds: ["BZ:sharkbrainguy"],
+    container: "Buzz"
+});

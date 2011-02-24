@@ -60,19 +60,17 @@ class Tweet extends Status
             callbacks.push callback
 
         if fresh
-            url = "http://api.twitter.com/1/statuses/show/#{id}.json"
+            jsonp
+                url: "http://api.twitter.com/1/statuses/show/#{id}.json"
+                callback: (json) ->
+                    status = Tweet.from(json)
 
-            callback = (json) ->
-                status = Tweet.from(json)
+                    __tweet_cache__[ key ] = status
 
-                __tweet_cache__[ key ] = status
+                    for callback in __callbacks__[ key ]
+                        try callback status
 
-                for callback in __callbacks__[ key ]
-                    try callback status
-
-                null
-
-            jsonp url, {}, callback
+                    null
 
         return placeholder || null
 
@@ -86,7 +84,10 @@ class TwitterTimeline extends Timeline
         if @statuses.length > 0
             data.since_id = @statuses.item(0).id
 
-        jsonp @queryUrl, data, (data) => @update data
+        jsonp
+            url: @queryUrl
+            data: data
+            callback: (json) => @update json
 
     queryUrl: "http://api.twitter.com/1/statuses/public_timeline.json"
 

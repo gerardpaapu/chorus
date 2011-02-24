@@ -1,6 +1,5 @@
 ## The unofficial hackerne.ws api ihackernews.com
-{Status, Timeline} = Chorus = @Chorus
-{extend} = $ = jQuery
+{Status, Timeline, extend, jsonp} = Chorus = @Chorus
 
 class HNComment extends Status
     constructor: (@id, @username, @date, @text, @raw, @parentID) ->
@@ -34,11 +33,10 @@ class HNUserComments extends Timeline
         super options
 
     fetch: ->
-        jQuery.ajax
+        jsonp
             url: "http://api.ihackernews.com/threads/#{@userid}"
             data: { format: 'jsonp'}
-            dataType: 'jsonp'
-            success: (data) => @update data
+            callback: (data) => @update data
 
     statusesFromData: (data) ->
         HNComment.from item for item in data.comments
