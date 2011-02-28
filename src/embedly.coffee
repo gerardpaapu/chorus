@@ -1,34 +1,36 @@
 class Embedly
     constructor: (options) ->
-        $.extend @options, options
+        @options = $.extend {}, @options, options
+        @services = {}
+        @patterns = []
+        @queue = []
 
     options:
         max_photo_width: Infinity
         make_thumbnails: yes
+        request_data: {}
 
     services: null
 
     patterns: null
 
-    queue: []
+    queue: null
 
     servicesLoaded: false
 
     intialized: false
-
-    data: {}
 
     loadServices: ->
         @initialized = true
 
         $.ajax
             url: "http://api.embed.ly/1/services/javascript"
-            dataType: 'json'
+            dataType: 'jsonp'
             success: (json) =>
                 for {regex, name} in json
-                    patterns = Regexp str for str in regex
+                    patterns = (RegExp str for str in regex)
                     @services[name] = patterns
-                    @patterns.push patterns
+                    @patterns.push patterns...
 
                 @onServicesLoaded()
 
@@ -40,10 +42,14 @@ class Embedly
         for {url, element} in @queue when @supported url
             @__make__(url, element)
 
-        null
+        @queue = []
 
     make: (link) ->
-        url = link.attr "href"
+        url = if (typeof link is "string" or link instanceof String)
+            link
+        else
+            link.attr "href"
+
         placeholder = $ '<div class="embed embed_placeholder" />'
 
         @loadServices() unless @initialized
@@ -52,18 +58,26 @@ class Embedly
             @queue.push url: url, element: placeholder
         else if @supported url
             @__make__ url, placeholder
+        else
+            # I feel like I should do something here
+            # to label the placeholder as an unsupported url
 
         placeholder
 
+    @make: (link) ->
+        Embedly.default ?= new Embedly()
+        Embedly.default.make(link)
+
     __make__: (url, placeholder) ->
-        data = $.merge {url: url}, @data
+        data = $.merge {}, @options.request_data, {url: url}
 
         $.ajax
             url: "http://api.embed.ly/v1/api/oembed"
+            dataType: 'jsonp'
             data: data
             success: (json) =>
                 if el = @fromJSON json
-                    el.replaceAll placeholder
+                    $(el).replaceAll placeholder
 
     supported: (url) ->
         throw Error "Services not Loaded" unless @servicesLoaded
@@ -73,7 +87,7 @@ class Embedly
 
         false
 
-    fromJson: (json) ->
+    fromJSON: (json) ->
         return @toThumbnail json if json.thumbnail_url? and @showThumbs
 
         switch json.type
@@ -83,32 +97,26 @@ class Embedly
 
     toPhoto: (json) ->
         ratio = json.height / json.width
-        width = Math.max(@options.max_photo_width, json.width)
-        height = parseInt(ratio * width, 10)
-        img = document.createElement "img"
-        img.src = json.url
-        img.width = json.width
-        img.height = json.height
+        width = Math.max @options.max_photo_width, json.width
+        height = parseInt ratio * width, 10
 
-        return img
+        """<img class="embed"
+                src="#{json.url}"
+                width="#{width}"
+                height="#{height}" />"""
 
     toThumbnail: (json) ->
-        link = document.createElement "a"
-        link.class = "embed"
-
-        img = document.createElement "img"
-        img.src = json.thumbnail_url
-        img.width = json.thumbnail_width
-        img.height = json.thumbnail_height
-
-        link.appendChild img
-
-        return link
+        """<a class="embed"
+              href="#{json.url}">
+              <img src="#{json.thumbnail_url}"
+                   width="#{json.thumbnail_width}"
+                   height="#{json.thumbnail_height}" />
+           </a>"""
 
     toHtml: (json) ->
-        el = document.createElement "div"
-        el.class = "embed"
-        el.style.width = json.width
-        el.style.height = json.height
+        """<div class="embed"
+                style="width: #{json.width}px; height: #{json.height}px; overflow: hidden">
+                #{json.html}
+           </div>"""
 
-        return el
+Chorus.Embedly = Embedly
