@@ -120,3 +120,11 @@ class Embedly
            </div>"""
 
 Chorus.Embedly = Embedly
+Chorus.extras ?= {}
+Chorus.extras.embed_media = (element, body, status) ->
+    el = $('<div class="embedly_wrapper"/>')
+
+    for link in $(body).find("a[href]")
+        el.append Embedly.make(link)
+
+    return el[0]
