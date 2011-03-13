@@ -162,8 +162,7 @@ class Status
 
     toKey: -> "<Status:#{@username} ID:#{@id}>"
 
-    toElement: (option) ->
-        options ?= {}
+    toElement: (options = {}) ->
         body     = @renderBody()
         element  = $ '<div class="status" />'
 
@@ -174,13 +173,13 @@ class Status
             @renderTimestamp())
 
         if options.extras?
-            extras = fn(element, body, this) for fn in options.extras
-            elements = extra for extra in extras when extra
+            extras = (fn(element, body, this) for fn in options.extras)
+            elements = (extra for extra in extras when extra)
 
             if elements.length > 0
                 el = $ '<div class="extras" />'
-                el.append elements...
                 element.append(el)
+                el.append elements...
 
         element
 
