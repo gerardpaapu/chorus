@@ -211,8 +211,7 @@ class Status
 
     toKey: -> "<Status:#{@username} ID:#{@id}>"
 
-    toElement: (option) ->
-        options ?= {}
+    toElement: (options = {}) ->
         body     = @renderBody()
         element  = $fromHTML '<div class="status"/>'
         context_link = @renderContext()
@@ -228,13 +227,13 @@ class Status
             $append element, context_link
 
         if options.extras?
-            extras = fn(element, body, this) for fn in options.extras
-            elements = extra for extra in extras when extra
+            extras = (fn(element, body, this) for fn in options.extras)
+            elements = (extra for extra in extras when extra)
 
             if elements.length > 0
                 el = $fromHTML '<div class="extras" />'
-                $append el, elements...
                 $append element, el
+                $append el, elements...
 
         element
 
