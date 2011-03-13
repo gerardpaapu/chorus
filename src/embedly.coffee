@@ -48,7 +48,7 @@ class Embedly
         url = if (typeof link is "string" or link instanceof String)
             link
         else
-            link.attr "href"
+            $(link).attr "href"
 
         placeholder = $ '<div class="embed embed_placeholder" />'
 
@@ -69,7 +69,7 @@ class Embedly
         Embedly.default.make(link)
 
     __make__: (url, placeholder) ->
-        data = $.merge {}, @options.request_data, {url: url}
+        data = $.extend {}, @options.request_data, {url: url}
 
         $.ajax
             url: "http://api.embed.ly/v1/api/oembed"
