@@ -4,6 +4,3 @@
 [submodule "lib/timeago"]
 	path = lib/timeago
 	url = https://github.com/rmm5t/jquery-timeago.git
-[submodule "lib/embedly"]
-	path = lib/embedly
-	url = https://github.com/embedly/embedly-jquery.git
