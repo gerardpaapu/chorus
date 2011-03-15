@@ -1,6 +1,6 @@
 $(function () {	
     // Uses the @@username shortcut for ConversationTimeline
-    $("#Twitter").chorus("@@boxerhockey");
+    $("#Twitter").chorus("@@Ditzy_M/kiwifruit ");
 
     // Follows commits to the master branch of *this* project
     $("#Github").chorus("GH:sharkbrainguy/qorus");

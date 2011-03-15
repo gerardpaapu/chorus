@@ -150,6 +150,14 @@ class TwitterConversationTimeline extends TwitterTimeline
         @subscribe @replies
         @subscribe @user
 
+class TwitterListConversationTimeline extends TwitterTimeline
+    constructor: (username, listname, options) ->
+        @list = new TwitterListTimeline username, listname, options
+        @replies = new ReplyTimeline @list
+
+        @subscribe @list
+        @subscribe @replies
+
 class ReplyTimeline extends Timeline
     # This subscribes to another timeline and publishes
     # all the tweets that it is replying to
@@ -181,6 +189,10 @@ linkify = (str) ->
     {
         pattern: /^@([a-z-_]+)\/([a-z-_]+)/i,
         fun: (_, name, list_name) -> new TwitterListTimeline(name, list_name)
+    },
+    {
+        pattern: /^@@([a-z-_]+)\/([a-z-_]+)/i,
+        fun: (_, name, list_name) -> new TwitterListConversationTimeline(name, list_name)
     },
     {
         pattern: /^@@([a-z0-9-_]+)$/i
