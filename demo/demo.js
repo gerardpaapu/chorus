@@ -1,14 +1,8 @@
-/*globals Chorus: false */
 new Chorus.View({
-    feeds: ["youtu.be"],
-    container: "Twitter",
-    updatePeriod: 500000, /* 3 Minutes */
-    renderOptions: {
-        extras: [ Chorus.extras.embed_media ]
-    }
+    feeds: ["@@boxerhockey"],
+    container: "Twitter"
 });
 
-/*
 new Chorus.View({
     feeds: ["GH:sharkbrainguy/qorus"],
     container: "Github"
@@ -28,4 +22,3 @@ new Chorus.View({
     feeds: ["BZ:sharkbrainguy"],
     container: "Buzz"
 });
-*/
