@@ -33,6 +33,14 @@ $fromHTML = (html) ->
     parent.innerHTML = html
     parent.childNodes[0]
 
+$replace = (orig, replacement) ->
+    replacement = if getClass replacement is "String"
+        $fromHTML replacement
+    else
+        replacement
+
+    orig.parentNode.replaceChild replacement, orig
+
 jsonp = (obj) ->
     {url, data, callback, padding} = obj
     data ?= {}
@@ -63,7 +71,7 @@ indexOf = Array::indexOf ? (needle) ->
 
     return -1
 
-extend Chorus, {extend, getClass, jsonp, $append, $fromHTML}
+extend Chorus, {extend, getClass, jsonp, $append, $fromHTML, $replace}
 
 # OrderedSet
 # ----------
@@ -226,7 +234,7 @@ class Status
     toKey: -> "<Status:#{@username} ID:#{@id}>"
 
     toElement: (options = {}) ->
-        body     = @renderBody()
+        body     = $fromHTML @renderBody()
         element  = $fromHTML '<div class="status"/>'
         context_link = @renderContext()
 
