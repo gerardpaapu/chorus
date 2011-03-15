@@ -1,4 +1,4 @@
-{extend, $append, $fromHTML, $replace, jsonp} = @Chorus
+{extend, getClass, $append, $fromHTML, $replace, jsonp} = @Chorus
 
 class Embedly
     constructor: (options) ->
@@ -46,7 +46,7 @@ class Embedly
         @queue = []
 
     make: (link) ->
-        url = if (typeof link is "string" or link instanceof String)
+        url = if getClass link is "String"
             link
         else
             link.getAttribute "href"

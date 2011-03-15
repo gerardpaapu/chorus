@@ -6,10 +6,24 @@ extend = (destination, sources...) ->
 
     destination
 
+getClass = (obj) ->
+    # The internal property [[Class]] of a given javascript
+    # object is a reliable way to identify various builtins
+    #
+    # ECMA-262 8.6.2 discusses the internal properties
+    # common to all Ecmascript Objects including [[Class]]
+    #
+    # ECMA-262 15.2.4.2 discusses the use of
+    # Object.prototype.toString to observe [[Class]]
+    switch obj
+        when null      then "Null"
+        when undefined then "Undefined"
+        else Object::toString.call(obj).slice(8, -1)
+
 $append = (el, children...) ->
     for child in children
-        switch typeof child
-            when 'string' then el.appendChild $fromHTML child
+        switch getClass child
+            when 'String' then el.appendChild $fromHTML child
             else el.appendChild child
 
     el
@@ -52,7 +66,7 @@ indexOf = Array::indexOf ? (needle) ->
 
     return -1
 
-extend Chorus, {extend, jsonp, $append, $fromHTML, $replace}
+extend Chorus, {extend, getClass, jsonp, $append, $fromHTML, $replace}
 
 # OrderedSet
 # ----------
@@ -340,7 +354,10 @@ class View extends PubSub
 
         if @options.container
             container = @options.container
-            container = if typeof container is 'string' then document.getElementById container else container
+            container = switch getClass(container)
+                when 'String' then document.getElementById container
+                else container
+
             $append container, @toElement()
 
     options:
