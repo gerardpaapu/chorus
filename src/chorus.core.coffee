@@ -34,7 +34,12 @@ $fromHTML = (html) ->
     parent.childNodes[0]
 
 $replace = (orig, replacement) ->
-    orig.parentNode.replaceChild $fromHTML(replacement), orig
+    replacement = if getClass replacement is "String"
+        $fromHTML replacement
+    else
+        replacement
+
+    orig.parentNode.replaceChild replacement, orig
 
 jsonp = (obj) ->
     {url, data, callback, padding} = obj

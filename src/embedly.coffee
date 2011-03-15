@@ -60,6 +60,7 @@ class Embedly
         else if @supported url
             @__make__ url, placeholder
         else
+            placeholder.className += ' unsupported'
             # I feel like I should do something here
             # to label the placeholder as an unsupported url
 
@@ -77,7 +78,7 @@ class Embedly
             data: data
             callback: (json) =>
                 if el = @fromJSON json
-                    $replace placeholder, $fromHTML(el)
+                    $replace placeholder, el
 
     supported: (url) ->
         throw Error "Services not Loaded" unless @servicesLoaded
@@ -127,4 +128,4 @@ Chorus.extras.embed_media = (element, body, status) ->
     for link in body.getElementsByTagName 'a'
         $append el, Embedly.make(link)
 
-    return el[0]
+    return el
