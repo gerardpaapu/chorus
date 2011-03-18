@@ -6,5 +6,7 @@
 # metric
 
 cake compress > /dev/null
-wc -c dist/chorus.twitter.min.js
-gzip -c dist/chorus.twitter.min.js | wc -c
+TOTAL=$(mktemp)
+cat dist/chorus.twitter.min.js demo/jquery.timeago.js | uglifyjs > $TOTAL
+wc -c $TOTAL 
+gzip -c $TOTAL | wc -c
