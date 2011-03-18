@@ -257,6 +257,7 @@ class Status
                 $append element, el
                 $append el, elements...
 
+
         element
 
     getAvatar: -> @avatar
@@ -270,11 +271,17 @@ class Status
         </a>"""
 
     renderTimestamp: ->
+        text = if Chorus.timeago?
+            Chorus.timeago.startUpdating()
+            Chorus.timeago @date
+        else
+            [ @date.toLocaleTimeString(), @date.toLocaleDateString() ].join ' '
+
         """
-        <a class="date"
+        <a class="date chorus_timestamp"
            href="#{ @getUrl() }"
-           title="#{ iso_datestring @date }">
-            #{ @date.toLocaleTimeString() } #{ @date.toLocaleDateString() }
+           data-time="#{ @date.getTime() }">
+           #{text}
         </a>"""
 
     renderScreenName: -> """
@@ -292,18 +299,6 @@ class Status
     __eq__: (status) -> @toKey() is status.toKey()
 
     __gt__: (status) -> @date.getTime() < status.date.getTime()
-
-iso_datestring = (d) ->
-    pad = (n) -> if n < 10 then '0' + n else n
-    year    = pad d.getUTCFullYear()
-    month   = pad d.getUTCMonth() + 1
-    day     = pad d.getUTCDate()
-    hours   = pad d.getUTCHours()
-    minutes = pad d.getUTCMinutes()
-    seconds = pad d.getUTCSeconds()
-
-    "#{year}-#{month}-#{day}T#{hours}:#{minutes}:#{seconds}Z"
-
 
 class Timeline extends PubSub
     constructor: (options) ->
