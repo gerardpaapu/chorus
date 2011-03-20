@@ -22,7 +22,7 @@ getClass = (obj) ->
 
 $append = (el, children...) ->
     for child in children
-        switch getClass child
+        switch getClass(child)
             when 'String' then el.appendChild $fromHTML child
             else el.appendChild child
 
@@ -34,7 +34,7 @@ $fromHTML = (html) ->
     parent.childNodes[0]
 
 $replace = (orig, replacement) ->
-    replacement = if getClass replacement is "String"
+    replacement = if getClass(replacement) is "String"
         $fromHTML replacement
     else
         replacement

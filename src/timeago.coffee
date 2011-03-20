@@ -72,7 +72,7 @@ inWords = (distanceMillis) ->
     "#{words} #{strings.suffixAgo}"
 
 distance = (date) ->
-    switch getClass date
+    switch getClass(date)
         when "Date"   then Date.now() - date.getTime()
         when "Number" then Date.now() - date
         when "String" then Date.now() - Date.parse(date)

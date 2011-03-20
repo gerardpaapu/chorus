@@ -46,7 +46,7 @@ class Embedly
         @queue = []
 
     make: (link) ->
-        url = if getClass link is "String"
+        url = if getClass(link) is "String"
             link
         else
             link.getAttribute "href"
