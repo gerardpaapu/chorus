@@ -3,7 +3,7 @@
 
 class FriendfeedStatus extends Status
     constructor: (id, username, avatar, date, text, raw, @url) ->
-        super id, username, avatar, date, text, raw
+        super id, username, avatar, parseUTC(date), text, raw
 
     getAvatar: -> "http://friendfeed-api.com/v2/picture/#{@username}?size=medium"
 
@@ -45,5 +45,22 @@ Timeline.shorthands.unshift {
     pattern: /^FF:(.*)$/,
     fun: (_, name) -> new FriendFeedTimeline name
 }
+
+parseUTC = (str) ->
+    pattern = /(\d{4})\-(\d{2})\-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z/
+    match = pattern.exec str
+    return new Date(0) if match is null
+
+    [_, year, month, day, hour, minute, second] = match
+    n = (s) -> parseInt s, 10
+    date = new Date()
+    date.setUTCFullYear n year
+    date.setUTCMonth n(month) - 1
+    date.setUTCDate n day
+    date.setUTCHours n hour
+    date.setUTCMinutes n minute
+    date.setUTCSeconds n second
+
+    date
 
 extend Chorus, {FriendfeedStatus, FriendFeedTimeline}

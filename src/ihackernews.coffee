@@ -68,8 +68,9 @@ parse_date = (str) ->
         minute:        60 * 1000
         hour:     60 * 60 * 1000
         day: 24 * 60 * 60 * 1000
-
-    new Date Date.now() - (units[unit] * Number(num))
+ 
+    now = new Date().getTime()
+    new Date now - units[unit] * Number(num)
 
 smiley = (name) ->
     eyes = "$^*@;TQ><?UuVveazoO096~pq"
@@ -78,7 +79,7 @@ smiley = (name) ->
         total = 0
         i = str.length
 
-        total += str.charCodeAt(i) while i--
+        total += str.charCodeAt(i) while --i
 
         return total
 

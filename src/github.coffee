@@ -13,7 +13,24 @@ class GithubCommit extends Status
     @from = (json) ->
         {author, url, id, authored_date, message} = json
         {name, email} = author
-        new GithubCommit id, name, gravatar(email), authored_date, message, json, url
+        new GithubCommit id, name, gravatar(email), GithubCommit.parseDate(authored_date), message, json, url
+
+    @parseDate: (str) ->
+        pattern = /(\d{4})\-(\d{2})\-(\d{2})T(\d{2}):(\d{2}):(\d{2})(\-|\+)(\d+):(\d+)/
+        match = pattern.exec str
+        [_, year, month, day, hour, minute, second, offset_sign, offset_hours, offset_minutes] = match
+        n = (str) -> parseInt str, 10
+        date = new Date()
+        date.setUTCFullYear n year
+        date.setUTCMonth n(month) - 1
+        date.setUTCDate n day
+        date.setUTCHours n hour
+        date.setUTCMinutes n minute
+        date.setUTCSeconds n second
+
+        plus_minus = if offset_sign is '+' then 1 else -1
+        offset = plus_minus * (n(offset_hours) * 360000 + n(offset_minutes) * 60000)
+        new Date(date.getTime() + offset)
 
 class GithubCommits extends Timeline
     constructor: (@username, @repo, options) ->
