@@ -342,11 +342,11 @@ extend @Chorus, {
 }
 
 $.fn.chorus = (arg) ->
-    view = switch Object::toString.call arg
-        when "[object String]"
+    view = switch $.type(arg)
+        when "string"
             new View feeds: makeArray(arguments)
 
-        when "[object Object]"
+        when "object"
             new View arg
 
         else null
