@@ -97,7 +97,7 @@ class Embedly
 
     toPhoto: (json) ->
         ratio = json.height / json.width
-        width = Math.max @options.max_photo_width, json.width
+        width = Math.min @options.max_photo_width, json.width
         height = parseInt ratio * width, 10
 
         """<img class="embed"
