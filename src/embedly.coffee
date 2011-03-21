@@ -45,7 +45,7 @@ class Embedly
         @queue = []
 
     make: (link) ->
-        url = if (typeof link is "string" or link instanceof String)
+        url = if $.type(link) is "string"
             link
         else
             $(link).attr "href"
