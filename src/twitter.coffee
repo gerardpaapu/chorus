@@ -4,6 +4,7 @@
 class Tweet extends Status
     constructor: (id, username, avatar, date, text, raw, @reply) ->
         super id, username, avatar, datefix(date), text, raw
+        __tweet_cache__[id] ?= this 
 
     getUrl: -> "http://twitter.com/#{@username}/statuses/#{@id}"
 
