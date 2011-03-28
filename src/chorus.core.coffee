@@ -149,7 +149,7 @@ class PubSub
     @bind: (object, fn) ->
         listener = new PubSub()
         listener.update = (data, src) ->
-            fn data
+            fn.call listener, data, src
             @publish data
 
         listener.subscribe object
