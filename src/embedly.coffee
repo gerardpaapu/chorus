@@ -4,6 +4,7 @@ class Embedly
         @services = {}
         @patterns = []
         @queue = []
+        @make = => Embedly::make.apply this, arguments
 
     options:
         max_photo_width: Infinity
@@ -67,6 +68,9 @@ class Embedly
     @make: (link) ->
         Embedly.default ?= new Embedly()
         Embedly.default.make(link)
+
+    @setDefaults: (options) ->
+        Embedly.default = new Embedly(options)
 
     __make__: (url, placeholder) ->
         data = $.extend {}, @options.request_data, {url: url}
