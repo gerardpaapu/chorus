@@ -304,7 +304,7 @@ class View extends PubSub
     subscribe: (pub) -> super Timeline.from(pub)
 
     update: (data, source) ->
-        new_statuses = source.statuses.slice(0, @options.count)
+        new_statuses = (s for s in source.statuses.slice(0, @options.count) when @options.filter s)
         statuses = @statuses.concat new_statuses
 
         if statuses != @statuses
