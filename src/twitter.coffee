@@ -179,7 +179,8 @@ datefix = (str) ->
     # that IE can't handle, so I convert it to something more normal.
     str.replace(/^(.+) (\d+:\d+:\d+) ((?:\+|-)\d+) (\d+)$/, "$1 $4 $2 GMT$3")
 
-linkify = (str) ->
+linkify = (str, entities) ->
+    return linkify_with_entities str, entities if entities?
     # creates links for hashtags, mentions and urls
     # TODO: replace this BS with some code to read the entities property
     # that twitter delivers from the API
@@ -187,7 +188,7 @@ linkify = (str) ->
         .replace(/(\s|^)@(\w+)/g, '$1<a class="mention" href="http://twitter.com/$2">@$2</a>')
         .replace(/(\s|^)#(\w+)/g, '$1<a class="hashTag" href="http://twitter.com/search?q=%23$2">#$2</a>')
 
-linkify = (str, entities) ->
+linkify_with_entities = (str, entities) ->
     segments = for segment in get_segments str, entities
         switch segment.type
             when 'string' then segment.val
@@ -195,7 +196,12 @@ linkify = (str, entities) ->
                 """<a class="hashTag" href="http://twitter.com/search?q=%23#{segment.val}">##{segment.val}</a>"""
 
             when 'url'
-                """<a href="http://#{segment.val}">#{segment.val}</a>"""
+                link = segment.val
+
+                if link.display_url
+                    """<a href="http://#{link.display_url}">#{link.display_url}</a>"""
+                else
+                    """<a href="#{link.url}">#{link.url}</a>"""
 
             when 'mention'
                 """<a class="mention" href="http://twitter.com/#{segment.val.screen_name}">@#{segment.val.name}</a>"""
@@ -219,7 +225,7 @@ get_segments = (str, entities) ->
 ungroup_entities = (entities) ->
     _entities = []
     for url in entities.urls
-        _entities.push type: 'url', start: url.indices[0], end: url.indices[1], val: url.display_url
+        _entities.push type: 'url', start: url.indices[0], end: url.indices[1], val: url
 
     for tag in entities.hashtags
         _entities.push type: 'tag', start: tag.indices[0], end: tag.indices[1], val: tag.text
