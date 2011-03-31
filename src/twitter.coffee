@@ -12,7 +12,7 @@ class Tweet extends Status
 
     renderBody: -> """
         <p class="statusBody">
-            #{ linkify(@text).replace '\n', '<br />' }
+            #{ @text.replace '\n', '<br />' }
         </p>"""
 
     renderReply: -> """
@@ -37,7 +37,7 @@ class Tweet extends Status
             userID: data.in_reply_to_user_id_str
             statusID: data.in_reply_to_status_id_str
 
-        {id_str, created_at, text} = data
+        {id_str, created_at, text, entities} = data
 
         if not data.user? # is this data from the Search API
             user_name = data.from_user
@@ -46,7 +46,7 @@ class Tweet extends Status
             user_name = data.user.screen_name
             avatar = data.user.profile_image_url
 
-        new Tweet id_str, user_name, avatar, created_at, text, data, reply
+        new Tweet id_str, user_name, avatar, created_at, linkify(text, entities), data, reply
 
     @fromID: (id, callback) ->
         unless callback?
@@ -108,6 +108,7 @@ class TwitterUserTimeline extends TwitterTimeline
             screen_name: @username
             count: @options.count
             include_rts: @options.includeRetweets
+            include_entities: yes
 
         super options
 
@@ -118,7 +119,7 @@ class TwitterUserTimeline extends TwitterTimeline
 class TwitterSearchTimeline extends TwitterTimeline
     constructor: (@searchTerm, options) ->
         @options = extend {}, @options, options
-        @sendData = q: searchTerm, rpp: @options.count, result_type: "recent"
+        @sendData = q: searchTerm, rpp: @options.count, result_type: "recent", include_entities: yes
         super options
 
     queryUrl: "http://search.twitter.com/search.json"
@@ -185,6 +186,50 @@ linkify = (str) ->
     str .replace(/(\s|^)(mailto\:|(news|(ht|f)tp(s?))\:\/\/\S+)/g, '$1<a href="$2">$2</a>')
         .replace(/(\s|^)@(\w+)/g, '$1<a class="mention" href="http://twitter.com/$2">@$2</a>')
         .replace(/(\s|^)#(\w+)/g, '$1<a class="hashTag" href="http://twitter.com/search?q=%23$2">#$2</a>')
+
+linkify = (str, entities) ->
+    segments = for segment in get_segments str, entities
+        switch segment.type
+            when 'string' then segment.val
+            when 'tag'
+                """<a class="hashTag" href="http://twitter.com/search?q=%23#{segment.val}">##{segment.val}</a>"""
+
+            when 'url'
+                """<a href="http://#{segment.val}">#{segment.val}</a>"""
+
+            when 'mention'
+                """<a class="mention" href="http://twitter.com/#{segment.val.screen_name}">@#{segment.val.name}</a>"""
+
+    segments.join ''
+
+get_segments = (str, entities) ->
+    entities = ungroup_entities entities
+    segments = []
+    from = 0
+
+    for entity in entities
+        segments.push type: 'string', val: str.slice(from, entity.start)
+        segments.push entity
+        from = entity.end
+
+    segments.push str.slice(from)
+
+    segments
+
+ungroup_entities = (entities) ->
+    _entities = []
+    for url in entities.urls
+        _entities.push type: 'url', start: url.indices[0], end: url.indices[1], val: url.display_url
+
+    for tag in entities.hashtags
+        _entities.push type: 'tag', start: tag.indices[0], end: tag.indices[1], val: tag.text
+
+    for mention in entities.user_mentions
+        _entities.push type: 'mention', start: mentions.indices[0], end: mentions.indices[1],  val: mention
+
+    _entities.sort (a, b) -> a.start - b.start
+
+    _entities
 
 Timeline.shorthands.push(
     {
