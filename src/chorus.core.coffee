@@ -240,6 +240,7 @@ class Timeline extends PubSub
         count: 25
         updateOnStart: true
         updatePeriod: 90000
+        filter: -> true
 
     statuses: new OrderedSet()
     subscribers: []
@@ -256,25 +257,37 @@ class Timeline extends PubSub
         @timer = null
 
     update: (data, source) ->
-        statuses = (s for s in @statusesFromData data when !@statuses.contains(s))
+        statuses = @statuses.concat(s for s in @statusesFromData data when @options.filter s)
 
-        if statuses.length > 0
-            @statuses = @statuses.concat statuses
-            @publish statuses
+        unless statuses is @statuses
+            @statuses = statuses
+            @publish statuses.toArray()
 
     @shorthands: []
 
     @from: (t) ->
         return t if t instanceof Timeline
         t = trim t
+        [_, root, filter] = /(.*)(?:\[(.*)\])?/.exec t
         for short in Timeline.shorthands
-            match = short.pattern.exec t
-            return short.fun match... if match
+            match = short.pattern.exec root
+            if match
+                timeline = short.fun match...
+                timeline.options.filter = filter_from filter
+                return timeline
 
         null
 
 trim = (str) ->
     str.replace(/^\s*/, '').replace(/\s*$/, '')
+
+filter_from = (pattern) ->
+    return (-> true) unless pattern
+    switch pattern[0]
+        when '#', '/'
+           (status) -> status.text.match(new RegExp pattern)
+
+        else -> true
 
 class View extends PubSub
     constructor: (options) ->
