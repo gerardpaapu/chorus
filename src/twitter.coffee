@@ -100,15 +100,18 @@ class TwitterTimeline extends Timeline
 
     statusesFromData: (data) -> Tweet.from item for item in data
 
+    sendData:
+        include_rts: yes
+        include_entities: yes
+
 class TwitterUserTimeline extends TwitterTimeline
     constructor: (username, options) ->
         @options  = extend {}, @options, options
         @username = username.toLowerCase()
-        @sendData =
+        @sendData = extend {}, @sendData,
             screen_name: @username
             count: @options.count
             include_rts: @options.includeRetweets
-            include_entities: yes
 
         super options
 
