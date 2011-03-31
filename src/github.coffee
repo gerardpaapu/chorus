@@ -42,7 +42,7 @@ extend Chorus, {GithubCommit, GithubCommits}
 gravatar = (email) ->
     "http://www.gravatar.com/avatar/#{ md5 trim(email).toLowerCase() }"
 
-trim = (str) -> str.replace(/^\s+|\s+$/g, "")
+trim = (str) -> str.replace(/^\s+/, "").replace(/\s+$/g, "")
 
 md5 = `function (string) {
  
