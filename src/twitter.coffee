@@ -184,9 +184,8 @@ datefix = (str) ->
 
 linkify = (str, entities) ->
     return linkify_with_entities str, entities if entities?
+
     # creates links for hashtags, mentions and urls
-    # TODO: replace this BS with some code to read the entities property
-    # that twitter delivers from the API
     str .replace(/(\s|^)(mailto\:|(news|(ht|f)tp(s?))\:\/\/\S+)/g, '$1<a href="$2">$2</a>')
         .replace(/(\s|^)@(\w+)/g, '$1<a class="mention" href="http://twitter.com/$2">@$2</a>')
         .replace(/(\s|^)#(\w+)/g, '$1<a class="hashTag" href="http://twitter.com/search?q=%23$2">#$2</a>')
@@ -217,9 +216,9 @@ get_segments = (str, entities) ->
     from = 0
 
     for entity in entities
-        segments.push type: 'string', val: str.slice(from, entity.start)
+        segments.push type: 'string', val: str.slice(from, entity.span[0])
         segments.push entity
-        from = entity.end
+        from = entity.span[1]
 
     segments.push str.slice(from)
 
@@ -228,15 +227,15 @@ get_segments = (str, entities) ->
 ungroup_entities = (entities) ->
     _entities = []
     for url in entities.urls
-        _entities.push type: 'url', start: url.indices[0], end: url.indices[1], val: url
+        _entities.push type: 'url', span: url.indices, val: url
 
     for tag in entities.hashtags
-        _entities.push type: 'tag', start: tag.indices[0], end: tag.indices[1], val: tag.text
+        _entities.push type: 'tag', span: tag.indices, val: tag.text
 
     for mention in entities.user_mentions
-        _entities.push type: 'mention', start: mentions.indices[0], end: mentions.indices[1],  val: mention
+        _entities.push type: 'mention', span: mention.indices,  val: mention
 
-    _entities.sort (a, b) -> a.start - b.start
+    _entities.sort (a, b) -> a.span[0] - b.span[0]
 
     _entities
 
