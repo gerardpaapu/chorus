@@ -60,8 +60,8 @@ class Embedly
         else if @supported url
             @__make__ url, placeholder
         else
-            # I feel like I should do something here
-            # to label the placeholder as an unsupported url
+            placeholder.removeClass 'embed_placeholder'
+            placeholder.addClass 'embed_unsupported'
 
         placeholder
 
@@ -96,7 +96,8 @@ class Embedly
 
         switch json.type
             when "photo" then @toPhoto json
-            when "video", "rich" then @toHtml json
+            when "video" then @toVideo json
+            when "rich"  then @toHtml json
             else false
 
     toPhoto: (json) ->
@@ -104,22 +105,33 @@ class Embedly
         width = Math.min @options.max_photo_width, json.width
         height = parseInt ratio * width, 10
 
-        """<img class="embed"
+        """<img class="embed embed_photo"
                 src="#{json.url}"
                 width="#{width}"
                 height="#{height}" />"""
 
     toThumbnail: (json) ->
-        """<a class="embed"
+        """<a class="embed embed_thumbnail"
               href="#{json.url}">
               <img src="#{json.thumbnail_url}"
                    width="#{json.thumbnail_width}"
                    height="#{json.thumbnail_height}" />
            </a>"""
 
+    toVideo: (json) ->
+        style = if json.width then """style="width: #{json.width}px;" """ else ""
+
+        """<div class="embed embed_video" #{style}>
+                #{json.html}
+           </div>"""
+
     toHtml: (json) ->
-        """<div class="embed"
-                style="width: #{json.width}px; height: #{json.height}px; overflow: hidden">
+        style = if json.width && json.height
+            """style="width: #{json.width}px; height: #{json.height}px;" """
+        else
+            ""
+
+        """<div class="embed embed_html" #{style}>
                 #{json.html}
            </div>"""
 
