@@ -206,7 +206,9 @@ linkify_with_entities = (str, entities) ->
                     """<a href="#{link.url}">#{link.url}</a>"""
 
             when 'mention'
-                """<a class="mention" href="http://twitter.com/#{segment.val.screen_name}">@#{segment.val.name}</a>"""
+                """<a class="mention"
+                      href="http://twitter.com/#{segment.val.screen_name}"
+                      title="#{segment.val.name}">@#{segment.val.screen_name}</a>"""
 
     segments.join ''
 
@@ -220,7 +222,7 @@ get_segments = (str, entities) ->
         segments.push entity
         from = entity.span[1]
 
-    segments.push str.slice(from)
+    segments.push type: 'string', val: str.slice(from)
 
     segments
 
