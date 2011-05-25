@@ -5,10 +5,10 @@ class GithubCommit extends Status
     constructor: (id, username, avatar, date, text, raw, @url) ->
         super id, username, avatar, date, text, raw
 
-    getUrl: -> "http://github.com/#{ @url }"
+    getUrl: -> "http://github.com#{ @url }"
 
     getStreamUrl: ->
-        "http://github.com/#{ @url.replace /\/commit\/[^\/]+$/, ''}"
+        "http://github.com#{ @url.replace /\/commit\/[^\/]+$/, ''}"
 
     @from = (json) ->
         {author, url, id, authored_date, message} = json
