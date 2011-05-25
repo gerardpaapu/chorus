@@ -8,5 +8,8 @@
 cake compress > /dev/null
 TOTAL=$(mktemp)
 cat dist/chorus.twitter.min.js demo/jquery.timeago.js | uglifyjs > $TOTAL
-wc -c $TOTAL 
-gzip -c $TOTAL | wc -c
+minified=$(wc -c < $TOTAL) 
+zipped=$(gzip -c < $TOTAL | wc -c)
+echo "minified: ${minified} bytes"
+echo "zipped:   ${zipped} bytes"
+
