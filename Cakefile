@@ -9,7 +9,8 @@ coffee_files = [
     "ihackernews",
     "github",
     "buzz",
-    "embedly"
+    "embedly",
+    "parsefilters"
 ]
 
 task "compile", "compile all the coffee files to js", ->
