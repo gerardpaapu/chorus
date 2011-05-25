@@ -12,7 +12,7 @@ class Tweet extends Status
 
     renderBody: -> """
         <p class="statusBody">
-            #{ @text.replace '\n', '<br />' }
+            #{ @text }
         </p>"""
 
     renderReply: -> """
@@ -186,18 +186,19 @@ linkify = (str, entities) ->
     return linkify_with_entities str, entities if entities?
 
     # creates links for hashtags, mentions and urls
-    str .replace(/(\s|^)(mailto\:|(news|(ht|f)tp(s?))\:\/\/\S+)/g, '$1<a href="$2">$2</a>')
+    str .replace('\n', '<br />')
+        .replace(/(\s|^)(mailto\:|(news|(ht|f)tp(s?))\:\/\/\S+)/g, '$1<a href="$2">$2</a>')
         .replace(/(\s|^)@(\w+)/g, '$1<a class="mention" href="http://twitter.com/$2">@$2</a>')
         .replace(/(\s|^)#(\w+)/g, '$1<a class="hashTag" href="http://twitter.com/search?q=%23$2">#$2</a>')
 
 linkify_with_entities = (str, entities) ->
     segments = for segment in get_segments str, entities
         switch segment.type
-            when 'string' then segment.val
-            when 'tag'
-                """<a class="hashTag" href="http://twitter.com/search?q=%23#{segment.val}">##{segment.val}</a>"""
+            when 'string' then segment.val.replace('\n', '<br />')
+            when 'hashtags'
+                """<a class="hashTag" href="http://twitter.com/search?q=%23#{segment.val.text}">##{segment.val.text}</a>"""
 
-            when 'url'
+            when 'urls'
                 link = segment.val
 
                 if link.display_url
@@ -205,7 +206,7 @@ linkify_with_entities = (str, entities) ->
                 else
                     """<a href="#{link.url}">#{link.url}</a>"""
 
-            when 'mention'
+            when 'user_mentions'
                 """<a class="mention"
                       href="http://twitter.com/#{segment.val.screen_name}"
                       title="#{segment.val.name}">@#{segment.val.screen_name}</a>"""
@@ -228,14 +229,10 @@ get_segments = (str, entities) ->
 
 ungroup_entities = (entities) ->
     _entities = []
-    for url in entities.urls
-        _entities.push type: 'url', span: url.indices, val: url
 
-    for tag in entities.hashtags
-        _entities.push type: 'tag', span: tag.indices, val: tag.text
-
-    for mention in entities.user_mentions
-        _entities.push type: 'mention', span: mention.indices,  val: mention
+    for key, value of entities
+        for e in value
+            _entities.push type: key, span: e.indices, val: e
 
     _entities.sort (a, b) -> a.span[0] - b.span[0]
 
