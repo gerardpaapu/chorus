@@ -80,7 +80,7 @@ class OrderedSet
 # Declared separately so that minifiers can mangle them
 #
 # Maintain the order of elements such that
-# for [a, ... b], gt(b, a) is true
+# for [a, ... b], gt(a, b) is false
 LESS = -1
 MORE = 1
 EQUAL = 0
