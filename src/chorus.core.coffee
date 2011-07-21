@@ -42,9 +42,11 @@ $replace = (orig, replacement) ->
     orig.parentNode.replaceChild replacement, orig
 
 jsonp = (obj) ->
-    {url, data, callback, padding} = obj
+    {url, data, callback, padding, timeout} = obj
     data ?= {}
     padding ?= "callback"
+    timeout ?= 10000 
+    timer = null
     head = document.getElementsByTagName("HEAD")[0]
     query = ("#{key}=#{value}&" for key, value of data).join('')
     key = "jsonp_callback_#{jsonp.uid}"
@@ -52,10 +54,19 @@ jsonp = (obj) ->
     script.type = "text/javascript"
     script.src = "#{url}?#{query}#{padding}=#{key}"
 
+    cleanup = ->
+        delete window[key] if window[key]?
+
+        if script.parentNode is head
+            head.removeChild script
+
+        window.clearTimeout timer
+
     window[key] = (data) ->
-        delete window[key]
-        head.removeChild script
+        cleanup()
         callback data
+
+    timer = window.setTimeout cleanup, timeout
 
     jsonp.uid++
     head.appendChild script
