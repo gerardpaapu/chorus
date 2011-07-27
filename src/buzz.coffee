@@ -80,7 +80,7 @@ getGoogleAvatar = (name, callback) ->
         dataType: "jsonp"
         jsonp: "jscb"
         success: (json) ->
-            user = json["http://www.google.com/profiles/#{name}"]
+            user = json["http://profiles.google.com/#{name}"]
             src  = user and user.attributes.photo
 
             callback name, src if src
