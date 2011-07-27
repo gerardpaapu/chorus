@@ -66,6 +66,9 @@ Each of them depends on the `core` module, which you can include with
 
 ### Facebook
 
+**Facebook support has been dropped**. Facebook now requires an OAuth token to get even public feeds. I won't
+be supporting until this changes or I find some reasonable way around it...
+
 The facebook module supports user feeds via the shorthand "FB:{id}"
 
     <script src="http://gerardpaapu.com/qorus/dist/facebook.min.js" type="text/javascript"></script> 
