@@ -209,7 +209,7 @@ class Status
             #{@username}
         </a>"""
 
-    renderBody: -> """<p class="statusBody">#{@text.replace '\n', '<br />'}</p>"""
+    renderBody: -> """<div class="statusBody">#{@text.replace '\n', '<br />'}</div>"""
 
     raw: null
 
