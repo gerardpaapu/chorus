@@ -5,3 +5,8 @@ Checkout the [live demo](http://gerardpaapu.com/qorus/demo).
 Read the [quickstart](https://github.com/sharkbrainguy/qorus/blob/master/doc/quickstart.mkd) to get going.
 
 The contents of this repo are available under the BSD style license specified in `LICENSE`
+
+Facebook doesn't currently work
+==
+
+AFAICT, Facebook now requires an oauth token to view public feeds... which makes it unrealistic to use for chorus.

@@ -7,10 +7,7 @@ $(function () {
 
     // Paul Graham on HackerNews
     // Paul Bucheit on FriendFeed
-    $("#HackerNews").chorus("HN:pg", "FF:paul");
-
-    // Barack Obama on Facebook
-    $("#Facebook").chorus("FB:BarackObama");
+    $("#HackerNews").chorus("HN:pg", "HN:patio11", "FF:paul");
 
     // Follows me on Buzz... does anyone use buzz?
     $("#Buzz").chorus("BZ:sharkbrainguy");
