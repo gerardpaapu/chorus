@@ -280,6 +280,7 @@ class View extends PubSub
     constructor: (options) ->
         @options = extend {}, @options, options
         @subscribe feed for feed in @options.feeds when feed?
+        @loading = true
 
         if @options.container?
             @toElement().appendTo @options.container
@@ -308,17 +309,22 @@ class View extends PubSub
         statuses = @statuses.concat new_statuses
 
         if statuses != @statuses
+            @loading = false
             @statuses = statuses
             @publish statuses
 
     toElement: ->
         element = $ '<div class="view chorus_view" />'
+        element.addClass 'loading' if @loading
 
         PubSub.bind this, => @updateElement element
         @updateElement element
         element.data 'View', this
 
     updateElement: (element) ->
+        unless @loading 
+            element.removeClass 'loading'
+
         statuses = @statuses.slice 0, @options.count
         children = (@renderStatus status for status in statuses)
         element.empty().append children...
