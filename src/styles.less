@@ -109,8 +109,12 @@
         .reply:active { text-decoration: underline; }
 
 
-        .statusBody { margin: 0 0 10px; }
-        p { margin: 0.5em 0; }
+        .statusBody {
+            margin: 0 0 10px;
+            p, pre { margin: 0.5em 0; }
+            pre { overflow: auto; }
+        }
+        
 
         .extras { padding: 5px 0; }
 
