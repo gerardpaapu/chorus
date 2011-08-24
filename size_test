@@ -6,7 +6,7 @@
 # metric
 
 cake compress > /dev/null
-TOTAL=$(mktemp)
+TOTAL=$(mktemp -t 'size')
 cat dist/chorus.twitter.min.js demo/jquery.timeago.js | uglifyjs > $TOTAL
 minified=$(wc -c < $TOTAL) 
 zipped=$(gzip -c < $TOTAL | wc -c)
