@@ -322,6 +322,7 @@ class Timeline extends PubSub
         count: 25
         updateOnStart: true
         updatePeriod: 90000
+        filter: (status) -> true
 
     statuses: new OrderedSet()
     subscribers: []
@@ -339,6 +340,9 @@ class Timeline extends PubSub
 
     update: (data, source) ->
         statuses = (s for s in @statusesFromData data when !@statuses.contains(s))
+
+        if getClass(@options.filter) == 'Function'
+            statuses = (s for s in statuses when @options.filter.call(this, s))
 
         if statuses.length > 0
             @statuses = @statuses.concat statuses
