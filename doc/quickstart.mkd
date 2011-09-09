@@ -66,6 +66,8 @@ Each of them depends on the `core` module, which you can include with
 
 ### Facebook
 
+**Facebook support has been dropped**
+
 The facebook module supports user feeds via the shorthand "FB:{id}"
 
     <script src="http://gerardpaapu.com/qorus/dist/facebook.min.js" type="text/javascript"></script> 

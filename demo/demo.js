@@ -14,11 +14,6 @@ new Chorus.View({
 });
 
 new Chorus.View({
-    feeds: ["FB:BarackObama"],
-    container: "Facebook"
-});
-
-new Chorus.View({
     feeds: ["BZ:sharkbrainguy"],
     container: "Buzz"
 });
