@@ -143,6 +143,7 @@ class TwitterConversationTimeline extends TwitterTimeline
 
         @subscribe @replies
         @subscribe @user
+
 class TwitterListConversationTimeline extends TwitterTimeline
     constructor: (username, listname, options) ->
         @list = new TwitterListTimeline username, listname, options
