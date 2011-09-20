@@ -17,3 +17,8 @@ new Chorus.View({
     feeds: ["BZ:sharkbrainguy"],
     container: "Buzz"
 });
+
+new Chorus.View({
+    feeds: ["+108227062559465276408"],
+    container: "GooglePlus"
+});

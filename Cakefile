@@ -7,6 +7,7 @@ coffee_files = [
     "wordpress",
     "ihackernews",
     "github",
+    "googleplus",
     "buzz",
     "embedly",
     "timeago"
@@ -23,6 +24,7 @@ task "compile", "compile all the coffee files to js", ->
         concat "chorus.core", "friendfeed", "chorus.friendfeed"
         concat "chorus.core", "github", "chorus.github"
         concat "chorus.core", "buzz", "chorus.buzz"
+        concat "chorus.core", "googleplus", "chorus.googleplus"
         console.log "compilation succeeded"
 
     catch err
@@ -45,6 +47,7 @@ task "compress", "compress the javascript files", ->
         compress "chorus.github"
         compress "chorus.twitter"
         compress "chorus.friendfeed"
+        compress "chorus.googleplus"
         console.log "compression succeeded"
 
     catch err
