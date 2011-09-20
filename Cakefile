@@ -3,11 +3,11 @@
 coffee_files = [
     "chorus.core",
     "twitter",
-    # "facebook",
     "friendfeed",
     "wordpress",
     "ihackernews",
     "github",
+    "googleplus",
     "buzz",
     "embedly"
 ]
@@ -23,6 +23,7 @@ task "compile", "compile all the coffee files to js", ->
         concat "chorus.core", "friendfeed", "chorus.friendfeed"
         concat "chorus.core", "ihackernews", "chorus.ihackernews"
         concat "chorus.core", "github", "chorus.github"
+        concat "chorus.core", "googleplus", "chorus.googleplus"
         # concat "chorus.core", "facebook", "chorus.facebook"
         concat "chorus.core", "buzz", "chorus.buzz"
         console.log "compilation succeeded"
@@ -45,6 +46,7 @@ task "compress", "compress the javascript files", ->
         compress name for name in coffee_files
         compress "chorus.core"
         compress "chorus.github"
+        compress "chorus.googleplus"
         compress "chorus.ihackernews"
         compress "chorus.twitter"
         # compress "chorus.facebook"
