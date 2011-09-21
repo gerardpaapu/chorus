@@ -1,5 +1,8 @@
 {Timeline, Status, Subscriber, extend, jsonp} = Chorus = @Chorus
 
+Chorus.setGooglePlusAPIKey = (key) ->
+    GPlusTimeline.api_key = key ? "AIzaSyD89SpEJuCNa1KBp14Tesjunno3I-XeROo"
+
 class PlusStatus extends Status
     constructor: (id, username, avatar, date, text, raw, @url, @streamUrl) ->
         super id, username, avatar, date, text, raw
@@ -14,19 +17,22 @@ class PlusStatus extends Status
         new PlusStatus id, displayName, image.url, published, object.content, data, url, stream
 
 class GPlusTimeline extends Timeline
-    constructor: (@id, options) -> super options
+    constructor: (@id, options) ->
+        super options
 
-    @api_key: "AIzaSyD89SpEJuCNa1KBp14Tesjunno3I-XeROo"
+    @api_key: null
 
-    fetch: -> jQuery.ajax
-        url: "https://www.googleapis.com/plus/v1/people/#{@id}/activities/public"
-        dataType: 'jsonp'
+    fetch: ->
+        if GPlusTimeline.api_key?
+            jQuery.ajax
+                url: "https://www.googleapis.com/plus/v1/people/#{@id}/activities/public"
+                dataType: 'jsonp'
 
-        data:
-            alt: 'json'
-            key: GPlusTimeline.api_key
+                data:
+                    alt: 'json'
+                    key: GPlusTimeline.api_key
 
-        success: (data) => @update data
+                success: (data) => @update data
 
     statusesFromData: (data) -> PlusStatus.from item for item in  data.items
 
