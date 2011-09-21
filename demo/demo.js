@@ -12,6 +12,6 @@ $(function () {
     // Follows me on Buzz... does anyone use buzz?
     $("#Buzz").chorus("BZ:sharkbrainguy");
 
-    Chorus.setGooglePlusAPIKey();
+    Chorus.setGooglePlusAPIKey(Chorus.GOOGLE_PLUS_DEV_KEY);
     $("#GooglePlus").chorus("+108227062559465276408");
 });
