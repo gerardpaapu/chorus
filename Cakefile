@@ -24,7 +24,6 @@ task "compile", "compile all the coffee files to js", ->
         concat "chorus.core", "ihackernews", "chorus.ihackernews"
         concat "chorus.core", "github", "chorus.github"
         concat "chorus.core", "googleplus", "chorus.googleplus"
-        # concat "chorus.core", "facebook", "chorus.facebook"
         concat "chorus.core", "buzz", "chorus.buzz"
         console.log "compilation succeeded"
 
@@ -49,7 +48,6 @@ task "compress", "compress the javascript files", ->
         compress "chorus.googleplus"
         compress "chorus.ihackernews"
         compress "chorus.twitter"
-        # compress "chorus.facebook"
         compress "chorus.friendfeed"
         console.log "compression succeeded"
 

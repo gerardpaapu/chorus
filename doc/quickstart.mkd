@@ -64,26 +64,12 @@ Each of them depends on the `core` module, which you can include with
     
     <script src="http://gerardpaapu.com/qorus/dist/chorus.core.min.js" type="text/javascript"></script> 
 
-### Facebook
-
-**Facebook support has been dropped**. Facebook now requires an OAuth token to get even public feeds. I won't
-be supporting until this changes or I find some reasonable way around it...
-
-The facebook module supports user feeds via the shorthand "FB:{id}"
-
-    <script src="http://gerardpaapu.com/qorus/dist/facebook.min.js" type="text/javascript"></script> 
-    <script>
-        jQuery(function ($) {
-            $("#MyFeed").chorus("FB:BarackObama");
-        });
-    </script> 
-
 ### Hacker News
 
 The Hacker News module follows a user's posts using the (dangerously violent) [ihackernews api](http://api.ihackernews.com/).
 It uses the shorthand "HN:{username}".
 
-    <script src="http://gerardpaapu.com/qorus/dist/ihackernews.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/dist/chorus.ihackernews.min.js" type="text/javascript"></script> 
     <script>
         jQuery(function ($) {
             $("#MyFeed").chorus("HN:paul", "HN:pg");
@@ -94,13 +80,25 @@ It uses the shorthand "HN:{username}".
 
 The Github module follows commits on a project (and branch), it uses the shorthands "GH:{user}/{project}" and "GH:{user}/{project}/{branch}".
 
-    <script src="http://gerardpaapu.com/qorus/dist/github.min.js" type="text/javascript"></script> 
+    <script src="http://gerardpaapu.com/qorus/dist/chorus.github.min.js" type="text/javascript"></script> 
     <script>
         jQuery(function ($) {
             $("#Projects").chorus("GH:sharkbrainguy/qorus", "GH:mootools/mootools-core/2.0wip");
         });
     </script> 
 
+### Google Plus
+
+The Google Plus module follows a given user's public timeline. Google Plus requires you to have an API key, a key to be used during development is provided in `Chorus.GOOGLE_PLUS_DEV_KEY` but for use in production you should [get your own API key](https://code.google.com/apis/console).
+
+    <script src="http://gerardpaapu.com/qorus/dist/chorus.googleplus.min.js" type="text/javascript"></script> 
+    <script>
+        jQuery(function ($) {
+            Chorus.setGooglePlusAPIKey(Chorus.GOOGLE_PLUS_DEV_KEY);
+            $("#GooglePlus").chorus("+108227062559465276408");
+        });
+    </script> 
+     
 ### Friendfeed
 
 The friendfeed module includes a users friendfeed, it uses the shorthands "FF:{user}"

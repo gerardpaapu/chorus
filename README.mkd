@@ -6,7 +6,6 @@ Read the [quickstart](https://github.com/sharkbrainguy/qorus/blob/master/doc/qui
 
 The contents of this repo are available under the BSD style license specified in `LICENSE`
 
-Facebook doesn't currently work
-==
+**Facebook support has been dropped**
 
 AFAICT, Facebook now requires an oauth token to view public feeds... which makes it unrealistic to use for chorus.
