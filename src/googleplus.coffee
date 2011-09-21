@@ -1,6 +1,6 @@
 {Timeline, Status, Subscriber, extend, jsonp} = Chorus = @Chorus
 
-class PlusStatus extends Status
+class GPlusStatus extends Status
     constructor: (id, username, avatar, date, text, raw, @url, @streamUrl) ->
         super id, username, avatar, date, text, raw
     
@@ -11,7 +11,7 @@ class PlusStatus extends Status
     @from: (data) ->
         {actor, url, published, object, id} = data 
         {displayName, image, stream}  = actor
-        new PlusStatus id, displayName, image.url, published, object.content, data, url, stream
+        new GPlusStatus id, displayName, image.url, published, object.content, data, url, stream
 
 class GPlusTimeline extends Timeline
     constructor: (@id, options) -> super options
@@ -27,6 +27,6 @@ class GPlusTimeline extends Timeline
 
         callback: (data) => @update data
 
-    statusesFromData: (data) -> PlusStatus.from item for item in  data.items
+    statusesFromData: (data) -> GPlusStatus.from item for item in  data.items
 
 Timeline.shorthands.unshift pattern: /^\+(\d+)$/, fun: (_, id) -> new GPlusTimeline(id)
