@@ -18,6 +18,7 @@ new Chorus.View({
     container: "Buzz"
 });
 
+Chorus.setGooglePlusAPIKey(Chorus.GOOGLE_PLUS_DEV_KEY);
 new Chorus.View({
     feeds: ["+108227062559465276408"],
     container: "GooglePlus"
