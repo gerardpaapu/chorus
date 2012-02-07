@@ -3,16 +3,10 @@
 
 class HNComment extends Status
     constructor: (@id, @username, @date, @text, @raw, @parentID) ->
-        @avatar = smiley @username
 
     getUrl: -> "http://news.ycombinator.com/item?id=#{@id}"
 
     getStreamUrl: -> "http://news.ycombinator.com/threads?id=#{@username}"
-
-    renderAvatar: -> """
-        <a href="#{@getStreamUrl()}" class="avatar">
-            #{ @avatar } 
-        </a>"""
 
     renderContext: ->
         return false unless @parentID?
@@ -65,20 +59,3 @@ parse_date = (str) ->
         day: 24 * 60 * 60 * 1000
 
     new Date Date.now() - (units[unit] * Number(num))
-
-smiley = (name) ->
-    eyes = "$^*@;TQ><?UuVveazoO096~pq"
-
-    name_to_num = (str) ->
-        total = 0
-        i = str.length
-
-        total += str.charCodeAt(i) while i--
-
-        return total
-
-    num = name_to_num name
-
-    o = eyes[ num % eyes.length ]
-
-    "#{o}_#{o}"

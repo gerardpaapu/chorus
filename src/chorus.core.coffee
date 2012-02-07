@@ -271,7 +271,7 @@ class Status
 
         element
 
-    getAvatar: -> @avatar
+    getAvatar: -> @avatar or "http://robohash.org/#{@username}.png?size=48x48" 
 
     getUrl: -> null
     getStreamUrl: -> null
