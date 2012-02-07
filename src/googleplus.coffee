@@ -20,7 +20,8 @@ class GPlusStatus extends Status
 
     getStreamUrl: -> @streamUrl
 
-    getAvatar: -> "#{@avatar}?sz=48"
+    getAvatar: -> 
+        @avatar.replace /(\?.*)?$/, '?sz=48'
 
     @from: (data) ->
         {actor, url, published, object, id} = data 
