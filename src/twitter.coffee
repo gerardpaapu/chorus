@@ -10,7 +10,7 @@ class Tweet extends Status
 
     renderBody: -> """
         <p class="statusBody">
-            #{ linkify(@text).replace '\n', '<br />' }
+            #{ @text }
         </p>"""
 
     renderContext: ->
@@ -32,7 +32,7 @@ class Tweet extends Status
             userID: data.in_reply_to_user_id_str
             statusID: data.in_reply_to_status_id_str
 
-        {id_str, created_at, text} = data
+        {id_str, created_at, text, entities} = data
 
         if not data.user? # is this data from the Search API
             user_name = data.from_user
@@ -41,13 +41,13 @@ class Tweet extends Status
             user_name = data.user.screen_name
             avatar = data.user.profile_image_url
 
-        new Tweet id_str, user_name, avatar, created_at, text, data, reply
+        new Tweet id_str, user_name, avatar, created_at, linkify(text, entities), data, reply
 
     @fromID: (id, callback) ->
         unless callback?
-            placeholder = $ '<div class="placeholder" />'
+            placeholder = Chorus.$fromHTML '<div class="placeholder" />'
             callback = (status) ->
-                status.toElement().replaceAll(placeholder)
+                Chorus.$replace status.toElement(), placeholder
 
         key       = "" + id
         cached    = __tweet_cache__[ key ] ? null
@@ -93,11 +93,15 @@ class TwitterTimeline extends Timeline
 
     statusesFromData: (data) -> Tweet.from item for item in data
 
+    sendData:
+        include_rts: yes
+        include_entities: yes
+
 class TwitterUserTimeline extends TwitterTimeline
     constructor: (username, options) ->
         @options  = extend {}, @options, options
         @username = username.toLowerCase()
-        @sendData =
+        @sendData = extend {}, @sendData,
             screen_name: @username
             count: @options.count
             include_rts: @options.includeRetweets
@@ -172,13 +176,56 @@ datefix = (str) ->
     # that IE can't handle, so I convert it to something more normal.
     str.replace(/^(.+) (\d+:\d+:\d+) ((?:\+|-)\d+) (\d+)$/, "$1 $4 $2 GMT$3")
 
-linkify = (str) ->
+linkify = (str, entities) ->
     # creates links for hashtags, mentions and urls
-    # TODO: replace this BS with some code to read the entities property
-    # that twitter delivers from the API
+    return linkify_with_entities str, entities if entities
+
     str .replace(/(\s|^)(mailto\:|(news|(ht|f)tp(s?))\:\/\/\S+)/g, '$1<a href="$2">$2</a>')
         .replace(/(\s|^)@(\w+)/g, '$1<a class="mention" href="http://twitter.com/$2">@$2</a>')
         .replace(/(\s|^)#(\w+)/g, '$1<a class="hashTag" href="http://twitter.com/search?q=%23$2">#$2</a>')
+
+linkify_with_entities = (str, entities) ->
+    segments = for segment in get_segments str, entities
+        switch segment.type
+            when 'string' then segment.val.replace('\n', '<br />')
+            when 'hashtags'
+                """<a class="hashTag" href="http://twitter.com/search?q=%23#{segment.val.text}">##{segment.val.text}</a>"""
+
+            when 'urls'
+                link = segment.val
+                """<a href="#{link.expanded_url or link.url}">#{link.display_url or link.url}</a>"""
+
+            when 'user_mentions'
+                """<a class="mention"
+                      href="http://twitter.com/#{segment.val.screen_name}"
+                      title="#{segment.val.name}">@#{segment.val.screen_name}</a>"""
+
+    segments.join ''
+
+get_segments = (str, entities) ->
+    entities = ungroup_entities entities
+    segments = []
+    from = 0
+
+    for entity in entities
+        segments.push type: 'string', val: str.slice(from, entity.span[0])
+        segments.push entity
+        from = entity.span[1]
+
+    segments.push type: 'string', val: str.slice(from)
+
+    segments
+
+ungroup_entities = (entities) ->
+    _entities = []
+
+    for key, value of entities
+        for e in value
+            _entities.push type: key, span: e.indices, val: e
+
+    _entities.sort (a, b) -> a.span[0] - b.span[0]
+
+    _entities
 
 Timeline.shorthands.push(
     {
