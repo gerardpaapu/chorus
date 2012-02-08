@@ -19,12 +19,13 @@ task "compile", "compile all the coffee files to js", ->
     try
         compile file for file in coffee_files
         compile_less "styles"
-        concat "chorus.core", "twitter", "chorus.twitter"
-        concat "chorus.core", "twitter", "wordpress", "chorus.wordpress"
-        concat "chorus.core", "friendfeed", "chorus.friendfeed"
-        concat "chorus.core", "github", "chorus.github"
-        concat "chorus.core", "buzz", "chorus.buzz"
-        concat "chorus.core", "googleplus", "chorus.googleplus"
+        concat "chorus.core", "timeago", "chorus"
+        concat "chorus", "twitter", "chorus.twitter"
+        concat "chorus", "twitter", "wordpress", "chorus.wordpress"
+        concat "chorus", "friendfeed", "chorus.friendfeed"
+        concat "chorus", "github", "chorus.github"
+        concat "chorus", "buzz", "chorus.buzz"
+        concat "chorus", "googleplus", "chorus.googleplus"
         console.log "compilation succeeded"
 
     catch err

@@ -7,6 +7,6 @@
 
 cake compress > /dev/null
 TOTAL=$(mktemp -t qorus)
-cat dist/chorus.twitter.min.js dist/timeago.min.js > $TOTAL
+cat dist/chorus.twitter.min.js > $TOTAL
 wc -c $TOTAL
 gzip -c $TOTAL | wc -c
