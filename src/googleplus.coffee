@@ -19,9 +19,8 @@ class GPlusStatus extends Status
     getUrl: -> @url
 
     getStreamUrl: -> @streamUrl
-
-    getAvatar: -> 
-        @avatar.replace /(\?.*)?$/, '?sz=48'
+   
+    getAvatar: -> QueryParameters.set @avatar, 'sz', 48
 
     @from: (data) ->
         {actor, url, published, object, id} = data 
@@ -72,3 +71,56 @@ class GPlusTimeline extends Timeline
     statusesFromData: (data) -> GPlusStatus.from item for item in data.items
 
 Timeline.shorthands.unshift pattern: /^\+(\d+)$/, fun: (_, id) -> new GPlusTimeline(id)
+
+# Read and write key/value pairs from/to query strings
+class QueryParameters
+    constructor: -> @data = {}
+
+    read: (str) ->
+        _ = decodeURIComponent
+        
+        if str.charAt 0 is '?'
+            str = str.slice 1
+        
+        for pair in str.split '&'
+            [key, value] = pair.split '='
+            @data[_(key)] = _(value)
+
+        this
+        
+    write: ->
+        _ = encodeURIComponent
+        pairs = []
+
+        for key, value of @data  
+            pairs.push( _(key) + '=' + _(value) )
+
+        if pairs.length is 0
+            ''
+        else
+            '?' + pairs.join('&')
+
+    set: (k, v) ->
+        @data[k] = v
+        return this
+
+    get: (k, fallback) -> 
+        if @data.hasOwnProperty(k)
+            @data[k]
+        else
+            fallback
+
+    @set: (url, k, v) ->
+        [base, query] = url.split '?'
+
+        _query = new QueryParameters(query).set(k, v).write()
+
+        return base + _query
+
+    @fromString: (str) ->
+        new QueryParameters().read(str)
+
+    @toString: (dict) ->
+        q = new QueryParameters()
+        q.data = dict
+        q.write()
