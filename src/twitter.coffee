@@ -200,11 +200,7 @@ linkify_with_entities = (str, entities) ->
 
             when 'urls'
                 link = segment.val
-
-                if link.display_url
-                    """<a href="http://#{link.display_url}">#{link.display_url}</a>"""
-                else
-                    """<a href="#{link.url}">#{link.url}</a>"""
+                """<a href="#{link.expanded_url or link.url}">#{link.display_url or link.url}</a>"""
 
             when 'user_mentions'
                 """<a class="mention"
