@@ -1,7 +1,7 @@
 Keep up to the minute with Chorus 
 ==
 
-Chorus is a jQuery library for fetching and displaying statuses in a webpage.
+Chorus is a javascript library for fetching and displaying statuses in a webpage.
 
 Chorus &#9829; Twitter
 ---
@@ -13,7 +13,6 @@ own server (and preferably concat them together and minify them yourself).
 
 To get started copy and paste these lines into the `<head>` of your document
 
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="http://gerardpaapu.com/qorus/dist/chorus.twitter.min.js"></script>
     <link type="text/css" rel="stylesheet" href="http://gerardpaapu.com/qorus/dist/styles.css" />
     <script>
@@ -49,33 +48,14 @@ And just for fun you can combine any number of timelines into a single view.
 
     $("#AllTweets").chorus("@sharkbrain", "@sharkbrain/my-tweeple", "#sharks");
 
-jQuery.timeago
----
-
-For more friendly dates (like "4 days ago") that magically update like magic, just include the
-[jquery.timeago](http://timeago.yarp.com/) on the page and Chorus will take care of the rest.
-
 Chorus Modules
 --
 
 Chorus supports a bunch of sources other than twitter through modules.
 
-Each of them depends on the `core` module, which you can include with
+Each of them depends on the `chorus` module, which you can include with
     
-    <script src="http://gerardpaapu.com/qorus/dist/chorus.core.min.js" type="text/javascript"></script> 
-
-### Facebook
-
-**Facebook support has been dropped**
-
-The facebook module supports user feeds via the shorthand "FB:{id}"
-
-    <script src="http://gerardpaapu.com/qorus/dist/facebook.min.js" type="text/javascript"></script> 
-    <script>
-        jQuery(function ($) {
-            $("#MyFeed").chorus("FB:BarackObama");
-        });
-    </script> 
+    <script src="http://gerardpaapu.com/qorus/dist/chorus.min.js" type="text/javascript"></script> 
 
 ### Hacker News
 

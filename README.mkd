@@ -1,4 +1,4 @@
-Chorus is a jQuery plugin for embedding timelines from various services (twitter, facebook etc.) in webpages.
+Chorus is a javascript module for embedding timelines from various services (twitter, facebook etc.) in webpages.
 
 Checkout the [live demo](http://gerardpaapu.com/qorus/demo).
 
