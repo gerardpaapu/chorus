@@ -8,7 +8,6 @@ coffee_files = [
     "ihackernews",
     "github",
     "googleplus",
-    "buzz",
     "embedly",
     "timeago"
 ]
@@ -24,7 +23,6 @@ task "compile", "compile all the coffee files to js", ->
         concat "chorus", "twitter", "wordpress", "chorus.wordpress"
         concat "chorus", "friendfeed", "chorus.friendfeed"
         concat "chorus", "github", "chorus.github"
-        concat "chorus", "buzz", "chorus.buzz"
         concat "chorus", "googleplus", "chorus.googleplus"
         console.log "compilation succeeded"
 
