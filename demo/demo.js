@@ -3,12 +3,12 @@ new Chorus.View({
     container: "Twitter"
 });
 
-/*
+
 new Chorus.View({
     feeds: ["GH:sharkbrainguy/qorus"],
     container: "Github"
 });
-*/
+
 
 new Chorus.View({
     feeds: ["FF:paul"],
