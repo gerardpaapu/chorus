@@ -48,14 +48,19 @@ jsonp = (obj) ->
     timeout ?= 10000 
     timer = null
     head = document.getElementsByTagName("HEAD")[0]
-    query = ("#{key}=#{value}&" for key, value of data).join('')
+    escape = window.escapeURIComponent
+    query = (for key, value of data
+        "#{escape key}=#{escape value}&").join('')
     key = "jsonp_callback_#{jsonp.uid}"
     script = document.createElement "script"
     script.type = "text/javascript"
     script.src = "#{url}?#{query}#{padding}=#{key}"
 
     cleanup = ->
-        delete window[key] if window[key]?
+        try
+            delete window[key] if window[key]?
+        catch err
+            window[key] = undefined
 
         if script.parentNode is head
             head.removeChild script
