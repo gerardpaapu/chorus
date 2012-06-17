@@ -3,18 +3,21 @@ new Chorus.View({
     container: "Twitter"
 });
 
+/*
 new Chorus.View({
     feeds: ["GH:sharkbrainguy/qorus"],
     container: "Github"
 });
+*/
 
 new Chorus.View({
-    feeds: ["HN:pg", "FF:paul"],
+    feeds: ["FF:paul"],
     container: "HackerNews"
 });
 
 Chorus.setGooglePlusAPIKey(Chorus.GOOGLE_PLUS_DEV_KEY);
 new Chorus.View({
     feeds: ["+108227062559465276408"],
-    container: "GooglePlus"
+    container: "GooglePlus",
+    count: 3
 });
