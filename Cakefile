@@ -31,7 +31,7 @@ task "compile", "compile all the coffee files to js", ->
 
 task "create-output-dir", "creates `dist`", ->
     try
-        fs.mkdirSync "dist", 0777
+        fs.mkdirSync "dist", 0o777
         console.log "Created the dist directory"
 
     catch err
