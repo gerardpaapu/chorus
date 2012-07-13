@@ -55,7 +55,10 @@ jsonp = (obj) ->
     script.src = "#{url}?#{query}#{padding}=#{key}"
 
     cleanup = ->
-        delete window[key] if window[key]?
+        try
+            delete window[key] if window[key]?
+        catch err
+            window[key] = undefined
 
         if script.parentNode is head
             head.removeChild script
