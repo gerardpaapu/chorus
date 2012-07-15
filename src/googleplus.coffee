@@ -76,24 +76,24 @@ Timeline.shorthands.unshift pattern: /^\+(\d+)$/, fun: (_, id) -> new GPlusTimel
 class QueryParameters
     constructor: -> @data = {}
 
+    decode = window.decodeURIComponent
+    encode = window.encodeURIComponent
+
     read: (str) ->
-        _ = decodeURIComponent
-        
         if str.charAt 0 is '?'
             str = str.slice 1
         
         for pair in str.split '&'
             [key, value] = pair.split '='
-            @data[_(key)] = _(value)
+            @data[decode(key)] = decode(value)
 
         this
         
     write: ->
-        _ = encodeURIComponent
         pairs = []
 
         for key, value of @data  
-            pairs.push( _(key) + '=' + _(value) )
+            pairs.push(encode(key) + '=' + encode(value))
 
         if pairs.length is 0
             ''
