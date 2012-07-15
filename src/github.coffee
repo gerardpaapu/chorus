@@ -17,8 +17,7 @@ class GithubCommit extends Status
 
 class GithubCommits extends Timeline
     constructor: (@username, @repo, options) ->
-        @queryUrl = "https://api.github.com/repos"
-        @queryUrl += "/#{@username}/#{@repo}/commits"
+        @queryUrl = "https://api.github.com/repos/#{@username}/#{@repo}/commits"
         super options
 
     fetch: -> jsonp 
