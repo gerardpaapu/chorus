@@ -1,3 +1,7 @@
+## Chorus is dead
+
+As of August 2012, the new Twitter guidlines probably make Chorus illegal and the new API will probably break it, so I wouldn't expect anything in chorus to work or be maintained from now forward .
+
 Chorus is a javascript module for embedding timelines from various services (twitter, facebook etc.) in webpages.
 
 Checkout the [live demo](http://gerardpaapu.com/qorus/demo).
